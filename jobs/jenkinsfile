@@ -16,8 +16,8 @@ pipeline {
         stage('stop/rm') {
             when {
                 expression {
-                    DOCKER_EXIST = bat(returnStatus: true, script: 'docker ps -q --filter name=${name_final}').trim()
-                    return DOCKER_EXIST == 0
+                    DOCKER_EXIST = bat(returnStatus: true, script: 'docker ps -q --filter name=${name_final}')
+                    return DOCKER_EXIST.toInteger() == 0
                 }
             }
             steps {
