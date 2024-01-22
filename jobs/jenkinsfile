@@ -16,25 +16,18 @@ pipeline {
         stage('stop/rm') {
             when {
                 expression {
-                    DOCKER_EXIST = bat(returnStatus: true, script: 'docker ps -q --filter name=${name_final}')
-                    if (DOCKER_EXIST.toInteger() != 0) {
-                    bat """
-                        docker stop ${name_final}
-                        docker rm ${name_final}
-                    """
-                     } else {
-                    echo "El contenedor no existe. No es necesario detenerlo ni eliminarlo."
-                        }
+                    DOCKER_EXIST = bat(returnStatus: true, script: "docker ps -q --filter name=${name_final}")
+                    return DOCKER_EXIST.toInteger() != 0
                 }
             }
-            /*steps {
+            steps {
                 script {
                     bat """
                         docker stop ${name_final}
                         docker rm ${name_final}
                     """
                 }
-            }*/
+            }
         }
 
         stage('build') {
