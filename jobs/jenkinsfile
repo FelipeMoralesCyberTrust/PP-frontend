@@ -19,7 +19,15 @@ pipeline {
                     DOCKER_EXIST = bat(returnStatus: true, script: 'docker ps -q --filter name=${name_final}')
                     return DOCKER_EXIST.toInteger() == 0
                 }
+                steps {
+                    script {
+                        bat """
+                            docker stop ${name_final}
+                            docker rm ${name_final}
+                        """
+                    }
             }
+/*            }
             steps {
                 script {
                     bat """
@@ -29,7 +37,7 @@ pipeline {
                 }
             }
         }
-
+*/
         stage('build') {
             steps {
                 script {
