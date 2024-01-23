@@ -10,8 +10,8 @@ pipeline {
     }
 
     environment {
-        name_final_front = "${name_container}/${name_imagen}:${tag_imagen}"
-        name_final_back = "${name_container}/${name_imagen2}:${tag_imagen}"
+        name_final_front = "${name_container}/${name_imagen_front}:${tag_imagen}"
+        name_final_back = "${name_container}/${name_imagen_back}:${tag_imagen}"
     }
 
     stages {
