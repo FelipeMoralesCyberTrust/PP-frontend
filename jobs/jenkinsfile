@@ -5,7 +5,7 @@ pipeline {
         string(name: 'name_container', defaultValue: 'felipemoralescybertrust', description: 'nombre del docker')
         string(name: 'name_imagen_front', defaultValue: 'practicafrontct', description: 'nombre de la imagen del front')
         string(name: 'tag_imagen', defaultValue: 'latest', description: 'etiqueta de la imagen')
-        string(name: 'puerto_imagen', defaultValue: '81', description: 'puerto a publicar')
+        //string(name: 'puerto_imagen', defaultValue: '81', description: 'puerto a publicar')
         string(name: 'name_imagen_back', defaultValue: 'practicabackct',description: 'nombre de la imagen del back')
     }
 
