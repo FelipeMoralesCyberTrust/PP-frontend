@@ -52,7 +52,7 @@ pipeline {
             steps {
                 script {
                     bat """
-                        docker build -t ${name_final} .
+                        docker build -t ${name_final1} .
                     """
                 }
             }
