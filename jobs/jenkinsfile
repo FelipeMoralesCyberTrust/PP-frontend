@@ -6,25 +6,43 @@ pipeline {
         string(name: 'name_imagen', defaultValue: 'practicafrontct', description: 'nombre de la imagen')
         string(name: 'tag_imagen', defaultValue: 'latest', description: 'etiqueta de la imagen')
         string(name: 'puerto_imagen', defaultValue: '81', description: 'puerto a publicar')
+        strimg(name: 'name_imagen2', defaultValue: 'practicabackct',description: 'nombre de la imagen')
     }
 
     environment {
-        name_final = "${name_container}/${name_imagen}:${tag_imagen}"
+        name_final1 = "${name_container}/${name_imagen}:${tag_imagen}"
+        name_final2 = "${name_container}/${name_imagen2}:${tag_imagen}"
     }
 
     stages {
         stage('stop/rm') {
             when {
                 expression {
-                    DOCKER_EXIST = bat(returnStatus: true, script: "docker ps -q --filter name=${name_final}")
+                    DOCKER_EXIST = bat(returnStatus: true, script: "docker ps -q --filter name=${name_final1}")
                     return DOCKER_EXIST.toInteger() != 0
                 }
             }
             steps {
                 script {
                     bat """
-                        docker stop ${name_final}
-                        docker rm ${name_final}
+                        docker stop ${name_final1}
+                        docker rm ${name_final1}
+                    """
+                }
+            }
+        }
+        stage('stop/rm_segundo') {
+            when {
+                expression {
+                    DOCKER_EXIST = bat(returnStatus: true, script: "docker ps -q --filter name=${name_final2}")
+                    return DOCKER_EXIST.toInteger() != 0
+                }
+            }
+            steps {
+                script {
+                    bat """
+                        docker stop ${name_final2}
+                        docker rm ${name_final2}
                     """
                 }
             }
@@ -44,7 +62,25 @@ pipeline {
             steps {
                 script {
                     bat """
-                        docker run -dp 81:81 --name practicafrontct felipemoralescybertrust/practicafrontct:latest
+                        docker run -dp 81:81 --name ${name_imagen1} ${name_final1}
+                    """
+                }
+            }
+        }
+        stage('build_segundo') {
+            steps {
+                script {
+                    bat """
+                        docker build -t ${name_final2} .
+                    """
+                }
+            }
+        }
+        stage('run') {
+            steps {
+                script {
+                    bat """
+                        docker run -dp 81:81 --name ${name_imagen2} ${name_final2}
                     """
                 }
             }
