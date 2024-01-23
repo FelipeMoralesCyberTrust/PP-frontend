@@ -3,30 +3,30 @@ pipeline {
 
     parameters {
         string(name: 'name_container', defaultValue: 'felipemoralescybertrust', description: 'nombre del docker')
-        string(name: 'name_imagen', defaultValue: 'practicafrontct', description: 'nombre de la imagen')
+        string(name: 'name_imagen_front', defaultValue: 'practicafrontct', description: 'nombre de la imagen del front')
         string(name: 'tag_imagen', defaultValue: 'latest', description: 'etiqueta de la imagen')
         string(name: 'puerto_imagen', defaultValue: '81', description: 'puerto a publicar')
-        string(name: 'name_imagen2', defaultValue: 'practicabackct',description: 'nombre de la imagen')
+        string(name: 'name_imagen_back', defaultValue: 'practicabackct',description: 'nombre de la imagen del back')
     }
 
     environment {
-        name_final1 = "${name_container}/${name_imagen}:${tag_imagen}"
-        name_final2 = "${name_container}/${name_imagen2}:${tag_imagen}"
+        name_final_front = "${name_container}/${name_imagen}:${tag_imagen}"
+        name_final_back = "${name_container}/${name_imagen2}:${tag_imagen}"
     }
 
     stages {
-        stage('stop/rm') {
+        stage('stop/rm_primero') {
             when {
                 expression {
-                    DOCKER_EXIST = bat(returnStatus: true, script: "docker ps -q --filter name=${name_final1}")
+                    DOCKER_EXIST = bat(returnStatus: true, script: "docker ps -q --filter name=${name_final_front}")
                     return DOCKER_EXIST.toInteger() != 0
                 }
             }
             steps {
                 script {
                     bat """
-                        docker stop ${name_final1}
-                        docker rm ${name_final1}
+                        docker stop ${name_final_front}
+                        docker rm ${name_final_front}
                     """
                 }
             }
@@ -34,35 +34,35 @@ pipeline {
         stage('stop/rm_segundo') {
             when {
                 expression {
-                    DOCKER_EXIST = bat(returnStatus: true, script: "docker ps -q --filter name=${name_final2}")
+                    DOCKER_EXIST = bat(returnStatus: true, script: "docker ps -q --filter name=${name_final_back}")
                     return DOCKER_EXIST.toInteger() != 0
                 }
             }
             steps {
                 script {
                     bat """
-                        docker stop ${name_final2}
-                        docker rm ${name_final2}
+                        docker stop ${name_final_back}
+                        docker rm ${name_final_back}
                     """
                 }
             }
         }
 
-        stage('build') {
+        stage('build_primero') {
             steps {
                 script {
                     bat """
-                        docker build -t ${name_final1} .
+                        docker build -t ${name_final_front} .
                     """
                 }
             }
         }
 
-        stage('run') {
+        stage('run_segundo') {
             steps {
                 script {
                     bat """
-                        docker run -dp 81:81 --name ${name_imagen1} ${name_final1}
+                        docker run -dp 81:81 --name ${name_imagen_front} ${name_final_front}
                     """
                 }
             }
@@ -71,7 +71,7 @@ pipeline {
             steps {
                 script {
                     bat """
-                        docker build -t ${name_final2} .
+                        docker build -t ${name_final_back} .
                     """
                 }
             }
@@ -80,7 +80,7 @@ pipeline {
             steps {
                 script {
                     bat """
-                        docker run -dp 81:81 --name ${name_imagen2} ${name_final2}
+                        docker run -dp 81:81 --name ${name_imagen_back} ${name_final_back}
                     """
                 }
             }
