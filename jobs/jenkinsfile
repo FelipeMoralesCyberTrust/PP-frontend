@@ -66,10 +66,12 @@ pipeline {
                 }
             }
         }
-                stage('Build and Deploy') {
+        stage('Build and Deploy') {
             steps {
                 script {
-                    sh 'docker-compose up -d'
+                    bat """
+                        'docker-compose up -d'
+                    """                    
                 }
             }
         }
