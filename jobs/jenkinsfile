@@ -52,7 +52,7 @@ pipeline {
             steps {
                 script {
                     bat """
-                        docker build -t ${name_final_front} .
+                        docker build -t ${name_final_front} https://github.com/FelipeMoralesCyberTrust/PP-frontend.git
                     """
                 }
             }
@@ -61,7 +61,7 @@ pipeline {
             steps {
                 script {
                     bat """
-                        docker build -t ${name_final_back} .
+                        docker build -t ${name_final_back} https://github.com/FelipeMoralesCyberTrust/PP-backend.git
                     """
                 }
             }
