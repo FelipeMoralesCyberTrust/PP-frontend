@@ -70,7 +70,7 @@ pipeline {
             steps {
                 script {
                     bat """
-                        docker-compose -f \PP-frontend\jobs\docker-compose.yml up -d
+                        docker-compose -f C:\Users\tiray\Documents\Practica1\docker-compose.yml up -d
                     """                    
                 }
             }
