@@ -75,8 +75,8 @@ pipeline {
                     // Cambiar al directorio del repositorio de frontend
                     dir('nombre_del_directorio_despues_del_checkout') {
                         bat 'docker-compose -f jobs/docker-compose.yml up -d'
-            }
+                }
             }
         }
     }
-}
+} }
