@@ -1,0 +1,37 @@
+version: "3"
+services:
+  back_practicaFelipe:
+    image: felipemoralescybertrust/practicabackct:latest
+    environment:
+      VIRTUAL_HOST: api.localhost
+    restart: always
+    container_name: back_practicaFelipe
+    expose:
+      - 80
+
+  front_practicaFelipe:
+    image: felipemoralescybertrust/practicafrontct:latest
+    environment:
+      VIRTUAL_HOST: localhost
+      REACT_APP_API_URL: api.localhost
+    restart: always
+    container_name: front_practicaFelipe
+    expose:
+      - 80
+
+  #servicio proxy entre contenedores
+  nginx-proxy:
+    #comando para configurar nginx
+    command: "sh -c 'echo \"server_tokens off;proxy_connect_timeout 300; proxy_send_timeout 300; proxy_read_timeout 90m; send_timeout 300; client_max_body_size 1024M;\" > /etc/nginx/conf/.d/my_proxy.conf; forego start -r'"
+    restart: always
+    image: jwilder/nginx-proxy
+    container_name: nginx-proxy
+    ports:
+      - "80:80"
+    volumes:
+      - /var/run/docker.sock:/tmp/docker.sock:ro
+
+networks:
+  default:
+    external:
+      name: nginx-proxy
