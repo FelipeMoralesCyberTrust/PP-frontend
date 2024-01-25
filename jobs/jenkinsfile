@@ -67,11 +67,15 @@ pipeline {
             }
         }
         stage('Build and Deploy') {
-            steps {
-                dir('https://github.com/FelipeMoralesCyberTrust/PP-frontend.git') {
-                        bat 'docker-compose -f jobs/docker-compose.yml up -d'
-                    }
+            script {
+            // Imprime el directorio actual para verificar
+            echo "Directorio actual: ${pwd()}"
+            
+            // Cambiar al directorio del repositorio de frontend
+            dir('nombre_del_directorio_despues_del_checkout') {
+                bat 'docker-compose -f jobs/docker-compose.yml up -d'
             }
+        }
         }
     }
 }
