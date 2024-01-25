@@ -68,11 +68,9 @@ pipeline {
         }
         stage('Build and Deploy') {
             steps {
-                script {
-                    bat """
-                        docker-compose -f https://github.com/FelipeMoralesCyberTrust/PP-frontend/blob/main/jobs/docker-compose.yml up -d
-                    """                    
-                }
+                dir('https://github.com/FelipeMoralesCyberTrust/PP-frontend.git') {
+                        bat 'docker-compose -f jobs/docker-compose.yml up -d'
+                    }
             }
         }
     }
