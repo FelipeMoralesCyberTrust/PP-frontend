@@ -69,11 +69,7 @@ pipeline {
         stage('Build and Deploy') {
             steps {
                 script {
-                    // Imprime el directorio actual para verificar
-                    echo "Directorio actual: ${pwd()}"
-            
-                    // Cambiar al directorio del repositorio de frontend
-                    dir('nombre_del_directorio_despues_del_checkout') {
+                    dir('C:\ProgramData\Jenkins\.jenkins\workspace\pipelineProyecto') {
                         bat 'docker-compose -f jobs/docker-compose.yml up -d'
                 }
             }
