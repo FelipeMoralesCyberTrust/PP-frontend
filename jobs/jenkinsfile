@@ -75,6 +75,7 @@ pipeline {
                                      string(credentialsId: 'JenkinsSonar', variable: 'CONTRASENA')]) {
                         withSonarQubeEnv('SonarCloud') {
                             bat "sonar-scanner \
+                            -Dsonar.organization=felipemoralescybertrust \
                             -Dsonar.projectKey=FelipeMoralesCyberTrust_PP-frontend \
                             -Dsonar.sources=. \
                             -Dsonar.host.url=https://sonarcloud.io \
@@ -119,6 +120,7 @@ pipeline {
                                      string(credentialsId: 'JenkinsSonar', variable: 'CONTRASENA')]) {
                         withSonarQubeEnv('SonarCloud') {
                             bat "sonar-scanner \
+                            -Dsonar.organization=felipemoralescybertrust \
                             -Dsonar.projectKey=FelipeMoralesCyberTrust_PP-backend \
                             -Dsonar.sources=. \
                             -Dsonar.host.url=https://sonarcloud.io \
