@@ -71,12 +71,15 @@ pipeline {
         stage('Analisis Repo 1') {
             steps {
                 script {
-                    withSonarQubeEnv('SonarCloud') {
-                        bat "sonar-scanner \
+                    withCredentials([string(credentialsId: 'IDsonar', variable: 'USUARIO'),
+                                     string(credentialsId: 'JenkinsSonar', variable: 'CONTRASENA')]) {
+                        withSonarQubeEnv('SonarCloud') {
+                            bat "sonar-scanner \
                             -Dsonar.projectKey=FelipeMoralesCyberTrust_PP-frontend \
                             -Dsonar.sources=. \
                             -Dsonar.host.url=https://sonarcloud.io \
                             -Dsonar.login=${IDsonar}:${JenkinsSonar}"
+                        }
                     }
                 }
             }
@@ -112,12 +115,15 @@ pipeline {
         stage('Analisis Repo 2') {
             steps {
                 script {
-                    withSonarQubeEnv('SonarCloud') {
-                        bat "sonar-scanner \
+                    withCredentials([string(credentialsId: 'IDsonar', variable: 'USUARIO'),
+                                     string(credentialsId: 'JenkinsSonar', variable: 'CONTRASENA')]) {
+                        withSonarQubeEnv('SonarCloud') {
+                            bat "sonar-scanner \
                             -Dsonar.projectKey=FelipeMoralesCyberTrust_PP-backend \
                             -Dsonar.sources=. \
                             -Dsonar.host.url=https://sonarcloud.io \
-                            -Dsonar.login=${IDsonar}:${JenkinsSonar}"
+                            -Dsonar.login=${USUARIO}:${CONTRASENA}"
+                        }
                     }
                 }
             }
