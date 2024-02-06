@@ -48,7 +48,17 @@ pipeline {
             }
         }
 
-        stage('build_primero') {
+        stage('Verificar Repo 1') {
+            steps {
+                checkout([$class: 'GitSCM', branches: [[name: '*/main']], 
+                          doGenerateSubmoduleConfigurations: false, 
+                          extensions: [], 
+                          submoduleCfg: [], 
+                          userRemoteConfigs: [[credentialsId: 'IDfelipe', url: 'https://github.com/FelipeMoralesCyberTrust/PP-frontend.git']]])
+            }
+        }
+
+        stage('Build Repo 1') {
             steps {
                 script {
                     bat """
@@ -57,7 +67,39 @@ pipeline {
                 }
             }
         }
-        stage('build_segundo') {
+
+        stage('Analisis Repo 1') {
+            steps {
+                script {
+                    withSonarQubeEnv('SonarCloud') {
+                        bat "sonar-scanner \
+                            -Dsonar.projectKey=FelipeMoralesCyberTrust_PP-frontend \
+                            -Dsonar.sources=. \
+                            -Dsonar.host.url=https://sonarcloud.io \
+                            -Dsonar.login=${IDjenkins-sonar}:${jenkins-sonar}"
+                    }
+                }
+            }
+        }
+        stage('Quality Gate Repo 2') {
+            steps {
+                timeout(time: 1, unit: 'HOURS') {
+                    waitForQualityGate abortPipeline: true
+                }
+            }
+        }
+
+        stage('Verificar Repo 2') {
+            steps {
+                checkout([$class: 'GitSCM', branches: [[name: '*/main']], 
+                          doGenerateSubmoduleConfigurations: false, 
+                          extensions: [], 
+                          submoduleCfg: [], 
+                          userRemoteConfigs: [[credentialsId: 'IDfelipe', url: 'https://github.com/FelipeMoralesCyberTrust/PP-backend.git']]])
+            }
+        }
+
+        stage('Build Repo 2') {
             steps {
                 script {
                     bat """
@@ -66,7 +108,30 @@ pipeline {
                 }
             }
         }
-        stage('Build and Deploy') {
+        
+        stage('Analisis Repo 2') {
+            steps {
+                script {
+                    withSonarQubeEnv('SonarCloud') {
+                        bat "sonar-scanner \
+                            -Dsonar.projectKey=FelipeMoralesCyberTrust_PP-backend \
+                            -Dsonar.sources=. \
+                            -Dsonar.host.url=https://sonarcloud.io \
+                            -Dsonar.login=${IDjenkins-sonar}:${jenkins-sonar}"
+                    }
+                }
+            }
+        }
+
+        stage('Quality Gate Repo 2') {
+            steps {
+                timeout(time: 1, unit: 'HOURS') {
+                    waitForQualityGate abortPipeline: true
+                }
+            }
+        }
+
+        stage('Deploy') {
             steps {
                 script {
                     dir('C:/ProgramData/Jenkins/.jenkins/workspace/pipelineProyecto') {
