@@ -69,12 +69,14 @@ pipeline {
             steps {
                 script {
                     withSonarQubeEnv('SonarCloud') {
+                        withCredentials([string(credentialsId: 'SonarTokenId', variable: 'SonarToJenkins')]) {
                             sh "sonar-scanner \
                             -Dsonar.organization=felipemoralescybertrust \
                             -Dsonar.projectKey=FelipeMoralesCyberTrust_PP-frontend \
                             -Dsonar.sources=. \
                             -Dsonar.host.url=https://sonarcloud.io \
                             -Dsonar.login=${SonarToJenkins}"
+                        }
                     }
                 }
             }
