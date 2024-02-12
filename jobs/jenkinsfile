@@ -50,7 +50,7 @@ pipeline {
                           doGenerateSubmoduleConfigurations: false, 
                           extensions: [], 
                           submoduleCfg: [], 
-                          userRemoteConfigs: [[credentialsId: 'IDfelipe', url: 'https://github.com/FelipeMoralesCyberTrust/PP-frontend.git']]])
+                          userRemoteConfigs: [[credentialsId: 'TokenGitFelipe', url: 'https://github.com/FelipeMoralesCyberTrust/PP-frontend.git']]])
             }
         }
 
@@ -95,7 +95,7 @@ pipeline {
                           doGenerateSubmoduleConfigurations: false, 
                           extensions: [], 
                           submoduleCfg: [], 
-                          userRemoteConfigs: [[credentialsId: 'IDfelipe', url: 'https://github.com/FelipeMoralesCyberTrust/PP-backend.git']]])
+                          userRemoteConfigs: [[credentialsId: 'TokenGitFelipe', url: 'https://github.com/FelipeMoralesCyberTrust/PP-backend.git']]])
             }
         }
 
