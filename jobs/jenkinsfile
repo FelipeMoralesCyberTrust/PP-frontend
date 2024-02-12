@@ -47,9 +47,9 @@ pipeline {
         stage('Verificar Repo 1') {
             steps {
                 checkout([$class: 'GitSCM', branches: [[name: '*/main']], 
-                          //doGenerateSubmoduleConfigurations: false, 
-                          //extensions: [], 
-                          //submoduleCfg: [], 
+                          doGenerateSubmoduleConfigurations: false, 
+                          extensions: [], 
+                          submoduleCfg: [], 
                           userRemoteConfigs: [[credentialsId: 'TokenGitFelipe', url: 'https://github.com/FelipeMoralesCyberTrust/PP-frontend.git']]])
             }
         }
@@ -114,15 +114,15 @@ pipeline {
         stage('Analisis Repo 2') {
             steps {
                 script {
-                    withCredentials([string(credentialsId: 'IDsonar', variable: 'USUARIO'),
-                                     string(credentialsId: 'JenkinsSonar', variable: 'CONTRASENA')]) {
-                        withSonarQubeEnv('SonarCloud') {
-                            sh "sonar-scanner \
+                    def scannerHome = tool 'sonar-scanner';
+                    withSonarQubeEnv('SonarCloud') {
+                        withCredentials([string(credentialsId: 'SonarToJenkins', variable: 'SonarToJenkins')]) {
+                            sh "${scannerHome}/bin/sonar-scanner \
                             -Dsonar.organization=felipemoralescybertrust \
                             -Dsonar.projectKey=FelipeMoralesCyberTrust_PP-backend \
                             -Dsonar.sources=. \
                             -Dsonar.host.url=https://sonarcloud.io \
-                            -Dsonar.login=${USUARIO}:${CONTRASENA}"
+                            -Dsonar.login=${SonarToJenkins}"
                         }
                     }
                 }
