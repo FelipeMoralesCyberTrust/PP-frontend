@@ -53,6 +53,16 @@ pipeline {
                           userRemoteConfigs: [[credentialsId: 'TokenGitFelipe', url: 'https://github.com/FelipeMoralesCyberTrust/PP-frontend.git']]])
             }
         }
+        stage('Login Docker'){
+            steps{
+                script{
+                    withCredentials([string(credentialsId: 'IdDockerFelipe', variable: 'USUARIODOCKER'),
+                                     string(credentialsId: 'PassDockerFelipe', variable: 'CONTRASENADOCKER')]){
+                                        sh "docker login -u ${USUARIODOCKER} -p ${CONTRASENADOCKER}"
+                                     }
+                }
+            }
+        }
 
         stage('Construir Primero') {
             steps {
