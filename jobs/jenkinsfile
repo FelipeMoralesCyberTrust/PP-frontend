@@ -53,17 +53,6 @@ pipeline {
                           userRemoteConfigs: [[credentialsId: 'TokenGitFelipe', url: 'https://github.com/FelipeMoralesCyberTrust/PP-frontend.git']]])
             }
         }
-        /*
-        stage('Login Docker'){
-            steps{
-                script{
-                    withCredentials([string(credentialsId: 'IdDockerFelipe', variable: 'USUARIODOCKER'),
-                                     string(credentialsId: 'PassDockerFelipe', variable: 'CONTRASENADOCKER')]){
-                                        sh "docker login -u ${USUARIODOCKER} -p ${CONTRASENADOCKER}"
-                                     }
-                }
-            }
-        }*/
 
         stage('Construir Primero') {
             steps {
@@ -79,16 +68,13 @@ pipeline {
         stage('Analisis Repo 1') {
             steps {
                 script {
-                    withCredentials([string(credentialsId: 'IDsonar', variable: 'USUARIO'),
-                                     string(credentialsId: 'JenkinsSonar', variable: 'CONTRASENA')]) {
-                        withSonarQubeEnv('SonarCloud') {
+                    withSonarQubeEnv('SonarCloud') {
                             sh "sonar-scanner \
                             -Dsonar.organization=felipemoralescybertrust \
                             -Dsonar.projectKey=FelipeMoralesCyberTrust_PP-frontend \
                             -Dsonar.sources=. \
                             -Dsonar.host.url=https://sonarcloud.io \
-                            -Dsonar.login=${USUARIO}:${CONTRASENA}"
-                        }
+                            -Dsonar.login=${SonarToJenkins}"
                     }
                 }
             }
