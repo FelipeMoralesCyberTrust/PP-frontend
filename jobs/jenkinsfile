@@ -140,10 +140,10 @@ pipeline {
         stage('Deploy') {
             steps {
                 script {
-                    dir('C:/ProgramData/Jenkins/.jenkins/workspace/pipelineProyecto') {
-                        sh 'docker-compose -f jobs/docker-compose.yml up -d'
+                    dir('/var/lib/jenkins/jobs/pipelineProyecto') {
+                        sh 'docker-compose -f docker-compose.yml up -d'
                 }
-            } 
+            } //C:/ProgramData/Jenkins/.jenkins/workspace/pipelineProyecto
         }
     }
 } }
