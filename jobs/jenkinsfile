@@ -24,7 +24,7 @@ pipeline {
             }
             steps {
                 script {
-                    bat """
+                    sh """
                         docker stop ${name_final_front}
                         docker rm ${name_final_front}
                     """
@@ -40,7 +40,7 @@ pipeline {
             }
             steps {
                 script {
-                    bat """
+                    sh """
                         docker stop ${name_final_back}
                         docker rm ${name_final_back}
                     """
@@ -61,7 +61,7 @@ pipeline {
         stage('Build Repo 1') {
             steps {
                 script {
-                    bat """
+                sh """
                         docker build -t ${name_final_front} https://github.com/FelipeMoralesCyberTrust/PP-frontend.git
                     """
                 }
@@ -74,7 +74,7 @@ pipeline {
                     withCredentials([string(credentialsId: 'IDsonar', variable: 'USUARIO'),
                                      string(credentialsId: 'JenkinsSonar', variable: 'CONTRASENA')]) {
                         withSonarQubeEnv('SonarCloud') {
-                            bat "sonar-scanner \
+                            sh "sonar-scanner \
                             -Dsonar.organization=felipemoralescybertrust \
                             -Dsonar.projectKey=FelipeMoralesCyberTrust_PP-frontend \
                             -Dsonar.sources=. \
@@ -106,7 +106,7 @@ pipeline {
         stage('Build Repo 2') {
             steps {
                 script {
-                    bat """
+                    sh """
                         docker build -t ${name_final_back} https://github.com/FelipeMoralesCyberTrust/PP-backend.git
                     """
                 }
@@ -119,7 +119,7 @@ pipeline {
                     withCredentials([string(credentialsId: 'IDsonar', variable: 'USUARIO'),
                                      string(credentialsId: 'JenkinsSonar', variable: 'CONTRASENA')]) {
                         withSonarQubeEnv('SonarCloud') {
-                            bat "sonar-scanner \
+                            sh "sonar-scanner \
                             -Dsonar.organization=felipemoralescybertrust \
                             -Dsonar.projectKey=FelipeMoralesCyberTrust_PP-backend \
                             -Dsonar.sources=. \
@@ -143,7 +143,7 @@ pipeline {
             steps {
                 script {
                     dir('C:/ProgramData/Jenkins/.jenkins/workspace/pipelineProyecto') {
-                        bat 'docker-compose -f jobs/docker-compose.yml up -d'
+                        sh 'docker-compose -f jobs/docker-compose.yml up -d'
                 }
             } 
         }
