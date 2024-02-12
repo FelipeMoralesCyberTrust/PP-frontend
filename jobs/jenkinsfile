@@ -54,12 +54,13 @@ pipeline {
             }
         }
 
-        stage('Build Repo 1') {
+        stage('Construir Primero') {
             steps {
                 script {
-                sh """
-                        docker build -t ${name_final_front} https://github.com/FelipeMoralesCyberTrust/PP-frontend.git
-                    """
+                    withCredentials([string(credentialsId: 'IdGitFelipe', variable: 'USUARIO'),
+                                     string(credentialsId: 'TokenGitFelipe', variable: 'CONTRASENA')]) {
+                        sh "docker build -t ${name_final_front} https://${USUARIO}:${CONTRASENA}@github.com/KaterinaPenaloza/ChatbotCybertrust-front.git"
+                    }
                 }
             }
         }
