@@ -47,9 +47,9 @@ pipeline {
         stage('Verificar Repo 1') {
             steps {
                 checkout([$class: 'GitSCM', branches: [[name: '*/main']], 
-                          doGenerateSubmoduleConfigurations: false, 
-                          extensions: [], 
-                          submoduleCfg: [], 
+                          //doGenerateSubmoduleConfigurations: false, 
+                          //extensions: [], 
+                          //submoduleCfg: [], 
                           userRemoteConfigs: [[credentialsId: 'TokenGitFelipe', url: 'https://github.com/FelipeMoralesCyberTrust/PP-frontend.git']]])
             }
         }
