@@ -18,7 +18,7 @@ pipeline {
         stage('stop/rm_primero') {
             when {
                 expression {
-                    DOCKER_EXIST = bat(returnStatus: true, script: "docker ps -q --filter name=${name_final_front}")
+                    DOCKER_EXIST = sh(returnStatus: true, script: "docker ps -q --filter name=${name_final_front}")
                     return DOCKER_EXIST.toInteger() != 0
                 }
             }
@@ -34,7 +34,7 @@ pipeline {
         stage('stop/rm_segundo') {
             when {
                 expression {
-                    DOCKER_EXIST = bat(returnStatus: true, script: "docker ps -q --filter name=${name_final_back}")
+                    DOCKER_EXIST = sh(returnStatus: true, script: "docker ps -q --filter name=${name_final_back}")
                     return DOCKER_EXIST.toInteger() != 0
                 }
             }
