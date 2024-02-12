@@ -15,35 +15,31 @@ pipeline {
     }
 
     stages {
-        stage('stop/rm_primero') {
-            when {
-                expression {
-                    DOCKER_EXIST = sh(returnStatus: true, script: "docker ps -q --filter name=${name_final_front}")
-                    return DOCKER_EXIST.toInteger() != 0
-                }
-            }
+        stage('Detener/Eliminar Primero') {
             steps {
                 script {
-                    sh """
-                        docker stop ${name_final_front}
-                        docker rm ${name_final_front}
-                    """
+                    def containerExists = sh(script: 'docker ps -q --filter name=felipemoralescybertrust/chatbotcybertrustfront:latest', returnStatus: true) == 0
+                    if (containerExists) {
+                        sh "docker stop ${name_imagen_front} || true"
+                        sh "docker rm ${name_imagen_front} || true"
+                    }
+                    else {
+                        echo 'El contenedor ${name_imagen_front} no existe. No se detendrá.'
+                    }
                 }
             }
         }
-        stage('stop/rm_segundo') {
-            when {
-                expression {
-                    DOCKER_EXIST = sh(returnStatus: true, script: "docker ps -q --filter name=${name_final_back}")
-                    return DOCKER_EXIST.toInteger() != 0
-                }
-            }
+        stage('Detener/Eliminar Segundo') {
             steps {
                 script {
-                    sh """
-                        docker stop ${name_final_back}
-                        docker rm ${name_final_back}
-                    """
+                    def containerExists = sh(script: "docker ps -q --filter name=${name_final_back}", returnStatus: true) == 0
+                    if (containerExists) {
+                        sh "docker stop ${name_imagen_back} || true"
+                        sh "docker rm ${name_imagen_back} || true"
+                    }
+                    else {
+                        echo "El contenedor ${name_imagen_back} no existe. No se detendrá ni eliminará."
+                    }
                 }
             }
         }
