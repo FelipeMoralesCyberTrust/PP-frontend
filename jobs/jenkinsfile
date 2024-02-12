@@ -69,7 +69,7 @@ pipeline {
             steps {
                 script {
                     withSonarQubeEnv('SonarCloud') {
-                        withCredentials([string(credentialsId: 'SonarTokenId', variable: 'SonarToJenkins')]) {
+                        withCredentials([string(credentialsId: 'SonarToJenkins', variable: 'SonarToJenkins')]) {
                             sh "sonar-scanner \
                             -Dsonar.organization=felipemoralescybertrust \
                             -Dsonar.projectKey=FelipeMoralesCyberTrust_PP-frontend \
