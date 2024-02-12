@@ -64,7 +64,7 @@ pipeline {
                 }
             }
         }
-        /*
+        
         stage('Analisis Repo 1') {
             steps {
                 script {
@@ -82,7 +82,7 @@ pipeline {
                 }
             }
         }
-        */
+        
         stage('Quality Gate Repo 1') {
             steps {
                 timeout(time: 1, unit: 'HOURS') {
