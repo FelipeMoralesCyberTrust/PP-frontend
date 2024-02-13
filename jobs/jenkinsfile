@@ -15,7 +15,7 @@ pipeline {
     }
 
     stages {
-        stage('Detener/Eliminar Primero') {
+        stage('Detener/Eliminar FrontEnd') {
             steps {
                 script {
                     def containerExists = sh(script: 'docker ps -q --filter name=felipemoralescybertrust/chatbotcybertrustfront:latest', returnStatus: true) == 0
@@ -29,7 +29,7 @@ pipeline {
                 }
             }
         }
-        stage('Detener/Eliminar Segundo') {
+        stage('Detener/Eliminar BackEnd') {
             steps {
                 script {
                     def containerExists = sh(script: "docker ps -q --filter name=${name_final_back}", returnStatus: true) == 0

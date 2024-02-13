@@ -1,23 +1,27 @@
 version: "3"
 services:
-  back_practicaFelipe:
+  practicabackct:
     image: felipemoralescybertrust/practicabackct:latest
     environment:
       VIRTUAL_HOST: api.localhost
     restart: always
-    container_name: back_practicaFelipe
+    container_name: practicabackct
     expose:
       - 80
+    networks:
+      - nginx-proxy
 
-  front_practicaFelipe:
+  practicafrontct:
     image: felipemoralescybertrust/practicafrontct:latest
     environment:
       VIRTUAL_HOST: localhost
       REACT_APP_API_URL: api.localhost
     restart: always
-    container_name: front_practicaFelipe
+    container_name: practicafrontct
     expose:
       - 80
+    networks:
+      - nginx-proxy
 
   #servicio proxy entre contenedores
   nginx-proxy:
@@ -30,8 +34,8 @@ services:
       - "80:80"
     volumes:
       - /var/run/docker.sock:/tmp/docker.sock:ro
+    networks:
+      - nginx-poxy
 
 networks:
-  default:
-    external:
-      name: nginx-proxy
+  nginx-proxy:
