@@ -134,15 +134,21 @@ pipeline {
             }
         }
         
-        stage('StackHawk analisis'){
+        stage('StackHawk Analisis Front'){
             steps{
                 script{
                     withCredentials([string(credentialsId: 'stackhawk-api-key', variable: 'STACKHAWK_API_KEY')])
-                        sh """
-                            docker run -e API_KEY=${STACKHAWK_API_KEY} --rm -v "$PWD":/hawk:rw -it stackhawk/hawkscan:latest \
-                            stackhawk scan --image ${name_final_front} \
-                            stackhawk scan --image ${name_final_back}
-                        """
+                        sh "docker run -e API_KEY=${STACKHAWK_API_KEY} --rm -v "$PWD":/hawk:rw -it stackhawk/hawkscan:latest \
+                            stackhawk scan --image ${name_final_front}"
+                }
+            }
+        }
+        stage('StackHawk Analisis Back'){
+            steps{
+                script{
+                    withCredentials([string(credentialsId: 'stackhawk-api-key', variable: 'STACKHAWK_API_KEY')])
+                        sh "docker run -e API_KEY=${STACKHAWK_API_KEY} --rm -v "$PWD":/hawk:rw -it stackhawk/hawkscan:latest \
+                            stackhawk scan --image ${name_final_back}"
                 }
             }
         }
