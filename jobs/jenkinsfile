@@ -12,7 +12,6 @@ pipeline {
     environment {
         name_final_front = "${name_container}/${name_imagen_front}:${tag_imagen}"
         name_final_back = "${name_container}/${name_imagen_back}:${tag_imagen}"
-        //STACKHAWK_API_KEY = credentialsId("stackhawk-api-key")
     }
 
     stages {
@@ -140,7 +139,7 @@ pipeline {
         }
         stage('Run HawkScan'){
             environment{
-                HAWK_API_KEY = credentialsId('stackhawk-api-key')
+                HAWK_API_KEY = credentials('stackhawk-api-key')
             }
             steps{
                 sh '''
