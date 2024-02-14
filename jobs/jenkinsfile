@@ -132,6 +132,7 @@ pipeline {
                 }
             }
         }
+        /*
         stage('Pull HawkScan'){
             steps{
                 sh 'docker pull stackhawk/hawkscan'
@@ -149,7 +150,7 @@ pipeline {
                      stackhawk/hawkscan
                 '''
             }
-        }
+        }*/
         
         stage('Deploy') {
             steps {
