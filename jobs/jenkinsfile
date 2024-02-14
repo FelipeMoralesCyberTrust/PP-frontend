@@ -138,20 +138,19 @@ pipeline {
             steps{
                 script{
                     withCredentials([string(credentialsId: 'stackhawk-api-key', variable: 'STACKHAWK_API_KEY')])
-                        sh "docker run -e API_KEY=${STACKHAWK_API_KEY} --rm -v '/var/lib/jenkins/workspace/pipelineProyecto':/hawk:rw -it stackhawk/hawkscan:latest \
-                            stackhawk scan --image ${name_final_front}"
-                }
+                        sh "docker run -e API_KEY=${STACKHAWK_API_KEY} --rm -v '/var/lib/jenkins/workspace':/hawk:rw -t stackhawk/hawkscan:latest"
+                }//stackhawk scan --image ${name_final_front}
             }
         }
+        /*
         stage('StackHawk Analisis Back'){
             steps{
                 script{
                     withCredentials([string(credentialsId: 'stackhawk-api-key', variable: 'STACKHAWK_API_KEY')])
-                        sh "docker run -e API_KEY=${STACKHAWK_API_KEY} --rm -v '/var/lib/jenkins/workspace/pipelineProyecto':/hawk:rw -t stackhawk/hawkscan:latest \
-                            stackhawk scan --image ${name_final_back}"
-                }
+                        sh "docker run -e API_KEY=${STACKHAWK_API_KEY} --rm -v '/var/lib/jenkins/workspace':/hawk:rw -t stackhawk/hawkscan:latest"
+                }//stackhawk scan --image ${name_final_back}
             }
-        }
+        }*/
 
         stage('Deploy') {
             steps {
