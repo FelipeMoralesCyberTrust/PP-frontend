@@ -133,34 +133,33 @@ pipeline {
                 }
             }
         }
-        
-        stage('Correr Scanner StackHawk'){
+        stage('Pull HawkScan'){
             steps{
-                script{
-                    withCredentials([string(credentialsId: 'stackhawk-api-key', variable: 'STACKHAWK_API_KEY')]){
-                        sh "docker run -e API_KEY=${STACKHAWK_API_KEY} -t stackhawk/hawkscan:latest"
-                    }
-                }
+                sh 'docker pull stackhawk/hawkscan'
             }
         }
-
-        
-        //sh "docker run -e API_KEY=${STACKHAWK_API_KEY} --rm -v '/var/lib/jenkins/workspace':/hawk:rw -t stackhawk/hawkscan:latest"
-        stage('StackHawk Analisis Front'){
+        stage('Run HawkScan'){
+            environment{
+                HAWK_API_KEY = credentialsId('stackhawk-api-key')
+            }
             steps{
-                script{
-                    sh "hawkscan --image ${name_final_front} --severity high"
-                }
+                sh '''
+                    docker run -v ${WORKSPACE}:hawk:rw -t \
+                    -e API_KEY=${HAWK_API_KEY} \
+                    -e NO_COLOR=true \
+                    stackhawk/hawkscan
+                '''
             }
         }
-
+        
         stage('Deploy') {
             steps {
                 script {
                     dir('/var/lib/jenkins/jobs/pipelineProyecto') {
                         sh 'docker-compose -f docker-compose.yml up -d'
-                }
-            } //C:/ProgramData/Jenkins/.jenkins/workspace/pipelineProyecto
+                    }
+                } //C:/ProgramData/Jenkins/.jenkins/workspace/pipelineProyecto
+            }
         }
     }
-} }
+}
