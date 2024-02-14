@@ -12,6 +12,7 @@ pipeline {
     environment {
         name_final_front = "${name_container}/${name_imagen_front}:${tag_imagen}"
         name_final_back = "${name_container}/${name_imagen_back}:${tag_imagen}"
+        STACKHAWK_API_KEY = credentialsId("stackhawk-api-key")
     }
 
     stages {
@@ -53,17 +54,6 @@ pipeline {
                           userRemoteConfigs: [[credentialsId: 'TokenGitFelipe', url: 'https://github.com/FelipeMoralesCyberTrust/PP-frontend.git']]])
             }
         }
-
-        stage('Build Repo 1') {
-            steps {
-                script {
-                    sh """
-                        docker build -t ${name_final_back} https://github.com/FelipeMoralesCyberTrust/PP-frontend.git
-                    """
-                }
-            }
-        }
-        
         stage('Analisis Repo 1') {
             steps {
                 script {
@@ -81,11 +71,20 @@ pipeline {
                 }
             }
         }
-        
         stage('Quality Gate Repo 1') {
             steps {
                 timeout(time: 1, unit: 'HOURS') {
                     waitForQualityGate abortPipeline: true
+                }
+            }
+        }
+
+        stage('Build Repo 1') {
+            steps {
+                script {
+                    sh """
+                        docker build -t ${name_final_back} https://github.com/FelipeMoralesCyberTrust/PP-frontend.git
+                    """
                 }
             }
         }
@@ -99,17 +98,6 @@ pipeline {
                           userRemoteConfigs: [[credentialsId: 'TokenGitFelipe', url: 'https://github.com/FelipeMoralesCyberTrust/PP-backend.git']]])
             }
         }
-
-        stage('Build Repo 2') {
-            steps {
-                script {
-                    sh """
-                        docker build -t ${name_final_back} https://github.com/FelipeMoralesCyberTrust/PP-backend.git
-                    """
-                }
-            }
-        }
-        
         stage('Analisis Repo 2') {
             steps {
                 script {
@@ -132,6 +120,16 @@ pipeline {
             steps {
                 timeout(time: 1, unit: 'HOURS') {
                     waitForQualityGate abortPipeline: true
+                }
+            }
+        }
+
+        stage('Build Repo 2') {
+            steps {
+                script {
+                    sh """
+                        docker build -t ${name_final_back} https://github.com/FelipeMoralesCyberTrust/PP-backend.git
+                    """
                 }
             }
         }
