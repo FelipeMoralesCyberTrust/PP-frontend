@@ -132,26 +132,15 @@ pipeline {
                 }
             }
         }
-        /*
-        stage('Pull HawkScan'){
+        stage('Procesar Resultados StackHawk'){
             steps{
-                sh 'docker pull stackhawk/hawkscan'
+                script{
+                    def response = httpRequest(url:'http://job/pipelineProyecto/')
+                }
             }
         }
-        stage('Run HawkScan'){
-            environment{
-                HAWK_API_KEY = credentials('stackhawk-api-key')
-            }
-            steps{
-                sh '''
-                    docker run -v ${WORKSPACE}:/hawk:rw -t \
-                     -e API_KEY=${HAWK_API_KEY} \
-                     -e NO_COLOR=true \
-                     stackhawk/hawkscan
-                '''
-            }
-        }*/
-        
+
+
         stage('Deploy') {
             steps {
                 script {
