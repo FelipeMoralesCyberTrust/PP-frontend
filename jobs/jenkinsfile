@@ -133,6 +133,14 @@ pipeline {
                 }
             }
         }
+        /*
+        stage('StackHawk analisis'){
+            steps{
+                script{
+                    sh "docker run -e API_KEY=${STACKHAWK_API_KEY} --rm -v "$PWD":/hawk:rw -it stackhawk/hawkscan:latest"
+                }
+            }
+        }*/
 
         stage('Deploy') {
             steps {
