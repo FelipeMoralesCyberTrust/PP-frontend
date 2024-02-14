@@ -137,8 +137,9 @@ pipeline {
         stage('Correr Scanner StackHawk'){
             steps{
                 script{
-                    withCredentials([string(credentialsId: 'stackhawk-api-key', variable: 'STACKHAWK_API_KEY')])
+                    withCredentials([string(credentialsId: 'stackhawk-api-key', variable: 'STACKHAWK_API_KEY')]){
                         sh "docker run -e API_KEY=${STACKHAWK_API_KEY} -t stackhawk/hawkscan:latest"
+                    }
                 }
             }
         }
