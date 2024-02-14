@@ -133,14 +133,19 @@ pipeline {
                 }
             }
         }
-        /*
+        
         stage('StackHawk analisis'){
             steps{
                 script{
-                    sh "docker run -e API_KEY=${STACKHAWK_API_KEY} --rm -v "$PWD":/hawk:rw -it stackhawk/hawkscan:latest"
+                    withCredentials([string(credentialsId: 'stackhawk-api-key', variable: 'STACKHAWK_API_KEY')])
+                        sh "
+                            docker run -e API_KEY=${STACKHAWK_API_KEY} --rm -v "$PWD":/hawk:rw -it stackhawk/hawkscan:latest
+                            stackhawk scan --image ${name_final_front}
+                            stackhawk scan --image ${name_final_back}
+                        "
                 }
             }
-        }*/
+        }
 
         stage('Deploy') {
             steps {
