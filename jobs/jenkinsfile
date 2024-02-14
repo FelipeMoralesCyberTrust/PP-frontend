@@ -132,10 +132,11 @@ pipeline {
                 }
             }
         }
+        /*
         stage('Procesar Resultados StackHawk'){
             steps{
                 script{
-                    def response = httpRequest(url:'http://54.207.206.167:8080/job/pipelineProyecto/', httpMode: 'POST', contentType:'APPLICATION_JSON')
+                    def response = httpRequest(url:'https://job/pipelineProyecto/', httpMode: 'POST', contentType:'APPLICATION_JSON')
                     def datos = responde.content
                     if (datos.contains("Scan Completed")) {
                         echo "El escaneo ha sido completado."
@@ -145,8 +146,28 @@ pipeline {
                     }
                 }
             }
+        }*/
+//http://54.207.206.167:8080/job/pipelineProyecto/
+        stage('Procesar Resultados StackHawk') {
+            steps {
+                script {
+                    def stackhawkWebhookUrl = 'https://job/pipelineProyecto/'
+                    def authToken = '11c290f411caf2238e54d369a611c0ccac'
+                    
+                    def response = httpRequest(
+                        acceptType: 'APPLICATION_JSON',
+                        contentType: 'APPLICATION_JSON',
+                        httpMode: 'POST',
+                        requestBody: '{}',
+                        url: stackhawkWebhookUrl,
+                        customHeaders: [[name: 'pipelineProyecto', value: authToken]]
+                    )
+                    
+                    println "Respuesta del servidor Jenkins: ${response}"
+                }
+            }
         }
-
+        
         stage('Deploy') {
             steps {
                 script {
