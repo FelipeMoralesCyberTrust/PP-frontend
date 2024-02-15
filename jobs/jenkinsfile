@@ -148,6 +148,7 @@ pipeline {
             }
         }*/
 //http://54.207.206.167:8080/job/pipelineProyecto/
+        /*
         stage('Procesar Resultados StackHawk') {
             steps {
                 script {
@@ -166,7 +167,7 @@ pipeline {
                     println "Respuesta del servidor Jenkins: ${response}"
                 }
             }
-        }
+        }*/
 
         stage('Deploy') {
             steps {
