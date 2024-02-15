@@ -152,7 +152,7 @@ pipeline {
             steps {
                 script {
                     def stackhawkWebhookUrl = 'http://54.207.206.167:8080/job/pipelineProyecto/'
-                    def authToken = '11c290f411caf2238e54d369a611c0ccac'
+                    def authToken = 'TokenToStackhawk'
                     
                     def response = httpRequest(
                         acceptType: 'APPLICATION_JSON',
