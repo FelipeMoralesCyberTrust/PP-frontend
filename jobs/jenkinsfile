@@ -18,7 +18,7 @@ pipeline {
         stage('Detener/Eliminar FrontEnd') {
             steps {
                 script {
-                    def containerExists = sh(script: 'docker ps -q --filter name=felipemoralescybertrust/chatbotcybertrustfront:latest', returnStatus: true) == 0
+                    def containerExists = sh(script: "docker ps -q --filter name=${name_final_front}", returnStatus: true) == 0
                     if (containerExists) {
                         sh "docker stop ${name_imagen_front} || true"
                         sh "docker rm ${name_imagen_front} || true"
