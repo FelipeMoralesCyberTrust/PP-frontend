@@ -28,12 +28,13 @@ pipeline {
                         sh "docker rm ${name_imagen_front} || true"
                     }
                     //Eliminando imagenes
-                    def imageExists = sh(script: "docker images --filter reference=${name_container}/${name_imagen_front}", returnStdout: true).trim()
+                    def imageExists = sh(script: "docker images --filter reference=${name_container}/${name_imagen_front} --format '{{.ID}}'", returnStdout: true).trim()
                     if(imageExists.isEmpty()){
                         echo "La imagen ${name_container}/${name_imagen_front} no existe, continuar con Jenkins."
                     }
                     else{
-                        sh "docker rmi ${name_container}/${name_imagen_front}"
+                        //sh "docker rmi ${name_container}/${name_imagen_front}"
+                        sh "docker rmi ${imageExists}"
                     }
                 }
             }
