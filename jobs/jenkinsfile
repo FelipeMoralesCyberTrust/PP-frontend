@@ -18,27 +18,46 @@ pipeline {
         stage('Detener/Eliminar FrontEnd') {
             steps {
                 script {
-                    def containerExists = sh(script: "docker ps -q --filter name=${name_final_front}", returnStatus: true) == 0
-                    if (containerExists) {
+                    //Eliminando contenedores
+                    def containerExists = sh(script: "docker ps -q --filter name=${name_imagen_front}", returnStdout: true).trim()
+                    if (containerExists.isEmpty()) {
+                        echo "El contenedor ${name_imagen_front} no existe. Continuar con Jenkins."                        
+                    }
+                    else {
                         sh "docker stop ${name_imagen_front} || true"
                         sh "docker rm ${name_imagen_front} || true"
                     }
-                    else {
-                        echo 'El contenedor ${name_imagen_front} no existe. No se detendrá.'
+                    //Eliminando imagenes
+                    def imageExists = sh(script: "docker images --filter reference=${name_container}/${name_imagen_front}", returnStdout: true).trim()
+                    if(imageExists.isEmpty()){
+                        echo "La imagen ${name_container}/${name_imagen_front} no existe, continuar con Jenkins."
+                    }
+                    else{
+                        sh "docker rmi ${name_container}/${name_imagen_front}"
                     }
                 }
             }
         }
+
         stage('Detener/Eliminar BackEnd') {
             steps {
                 script {
-                    def containerExists = sh(script: "docker ps -q --filter name=${name_final_back}", returnStatus: true) == 0
-                    if (containerExists) {
+                    //Eliminando contenedores
+                    def containerExists = sh(script: "docker ps -q --filter name=${name_imagen_back}", returnStdout: true).trim()
+                    if (containerExists.isEmpty()) {
+                        echo "El contenedor ${name_imagen_back} no existe. Continuar con Jenkins."
+                    }
+                    else {
                         sh "docker stop ${name_imagen_back} || true"
                         sh "docker rm ${name_imagen_back} || true"
                     }
-                    else {
-                        echo "El contenedor ${name_imagen_back} no existe. No se detendrá ni eliminará."
+                    //Eliminando imagenes
+                    def imageExists = sh(script: "docker images --filter reference=${name_container}/${name_imagen_back}", returnStdout: true).trim()
+                    if(imageExists.isEmpty()){
+                        echo "La imagen ${name_container}/${name_imagen_back} no existe, continuar con Jenkins."
+                    }
+                    else{
+                        sh "docker rmi ${name_container}/${name_imagen_back}"
                     }
                 }
             }
