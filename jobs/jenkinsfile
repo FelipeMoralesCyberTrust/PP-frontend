@@ -153,7 +153,7 @@ pipeline {
                 }
             }
         }
-
+        /*
         stage('Procesar Resultados StackHawk'){
             steps{
                 script{
@@ -166,6 +166,26 @@ pipeline {
                         error "Error durante el escaneo. Deteniendo el trabajo."
                     }
                 }
+            }
+        }
+        */
+
+        stage ("Pull HawkScan Image") {
+            steps {
+                sh 'docker pull stackhawk/hawkscan'
+            }
+        }
+        stage ("Run HawkScan Test") {
+            environment {
+                HAWK_API_KEY = credentials('stackhawk-api-key')
+            }
+            steps {
+                sh '''
+                    docker run -v ${WORKSPACE}:/hawk:rw -t \
+                    -e API_KEY=${HAWK_API_KEY} \
+                    -e NO_COLOR=true \
+                    stackhawk/hawkscan
+                '''
             }
         }
 
