@@ -1,6 +1,6 @@
 app:
   applicationId: e1552535-9d61-4546-852d-751b2f0919d4
-  host: 
+  host: http://example.com
   env: Development
 
 hawk:
