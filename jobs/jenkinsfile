@@ -190,20 +190,15 @@ pipeline {
 
         stage ("Pull HawkScan Image") {
             steps {
-                sh 'docker pull stackhawk/hawkscan:latest'
+                sh "docker pull stackhawk/hawkscan:latest"
             }
         }
         stage ("Run HawkScan Test") {
             environment {
-                HAWK_API_KEY = credentials('TokenToStackhawk')
+                HAWK_API_KEY = credentials('stackhawk-api-key')
             }
             steps {
-                sh '''
-                    docker run /var/lib/jenkins/workspace \
-                    -e API_KEY=${HAWK_API_KEY} \
-                    -e NO_COLOR=true \
-                    stackhawk/hawkscan
-                '''
+                sh "docker run -v /var/lib/jenkins/workspace -e API_KEY=${HAWK_API_KEY} -e NO_COLOR=true stackhawk/hawkscan"
             }
         }
 
