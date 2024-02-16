@@ -177,14 +177,13 @@ pipeline {
             }
         }
         stage ("Run HawkScan Test") {
-            environment {
-                hawk_api_key = credentials('stackhawk-api-key')
-            }
             steps {
-                sh '''docker run -v ${workspace}:/hawk:rw -t \
-                    -e api_key=${hawk_api_key} \
-                    -e no_color=true \
-                    stackhawk/hawkscan'''
+                withCredentials([string(credentialsId:'stackhawk-api-key', variable: 'hawk_api_key')]){
+                    sh "docker run -v ${workspace}:/hawk:rw -t \
+                        -e api_key=${hawk_api_key} \
+                        -e no_color=true \
+                        stackhawk/hawkscan"
+                }
             }
         }
 
