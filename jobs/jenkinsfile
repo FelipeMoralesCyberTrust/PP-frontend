@@ -190,7 +190,7 @@ pipeline {
 
         stage ("Pull HawkScan Image") {
             steps {
-                sh 'docker pull stackhawk/hawkscan'
+                sh 'docker pull stackhawk/hawkscan:latest'
             }
         }
         stage ("Run HawkScan Test") {
@@ -199,7 +199,7 @@ pipeline {
             }
             steps {
                 sh '''
-                    docker run -v /var/lib/jenkins/jobs/pipelineProyecto:/hawk:rw -t \
+                    docker run /var/lib/jenkins/workspace \
                     -e API_KEY=${HAWK_API_KEY} \
                     -e NO_COLOR=true \
                     stackhawk/hawkscan
