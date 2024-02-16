@@ -13,7 +13,7 @@ pipeline {
     }
     stage ("Run HawkScan Test") {
       environment {
-        HAWK_API_KEY = credentials('HAWK_API_KEY')
+        HAWK_API_KEY = credentials('stackhawk-api-key')
       }
       steps {
         sh '''
