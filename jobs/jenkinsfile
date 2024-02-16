@@ -12,6 +12,7 @@ pipeline {
     environment {
         name_final_front = "${name_container}/${name_imagen_front}:${tag_imagen}"
         name_final_back = "${name_container}/${name_imagen_back}:${tag_imagen}"
+        workspace = "${/var/lib/jenkins/workspace/pipelineProyecto}"
     }
 
     stages {
@@ -180,7 +181,7 @@ pipeline {
                 hawk_api_key = credentials('stackhawk-api-key')
             }
             steps {
-                sh '''docker run -v /var/lib/jenkins/workspace/pipelineProyecto:/hawk:rw -t \
+                sh '''docker run -v ${workspace}:/hawk:rw -t \
                     -e api_key=${hawk_api_key} \
                     -e no_color=true \
                     stackhawk/hawkscan'''
