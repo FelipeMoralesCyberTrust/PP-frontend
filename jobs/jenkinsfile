@@ -153,12 +153,12 @@ pipeline {
                 }
             }
         }
-        /*
+
         stage('Procesar Resultados StackHawk'){
             steps{
                 script{
                     def response = httpRequest(url:'https://job/pipelineProyecto/', httpMode: 'POST', contentType:'APPLICATION_JSON')
-                    def datos = responde.content
+                    def datos = response.content
                     if (datos.contains("Scan Completed")) {
                         echo "El escaneo ha sido completado."
                     } else if (datos.contains("Scan Errored")) {
@@ -166,47 +166,6 @@ pipeline {
                         error "Error durante el escaneo. Deteniendo el trabajo."
                     }
                 }
-            }
-        }*/
-//http://54.207.206.167:8080/job/pipelineProyecto/
-        /*
-        stage('Procesar Resultados StackHawk') {
-            steps {
-                script {
-                    def stackhawkWebhookUrl = 'http://54.207.206.167:8080/job/pipelineProyecto/'
-                    def authToken = 'TokenToStackhawk'
-                    
-                    def response = httpRequest(
-                        acceptType: 'APPLICATION_JSON',
-                        contentType: 'APPLICATION_JSON',
-                        httpMode: 'POST',
-                        requestBody: '{}',
-                        url: stackhawkWebhookUrl,
-                        customHeaders: [[name: 'pipelineProyecto', value: authToken]]
-                    )
-                    
-                    println "Respuesta del servidor Jenkins: ${response}"
-                }
-            }
-        }*/
-
-        stage ("Pull HawkScan Image") {
-            steps {
-                sh "docker pull stackhawk/hawkscan:latest"
-            }
-        }
-        stage ("Run HawkScan Test") {
-            environment {
-                HAWK_API_KEY = credentials('stackhawk-api-key')
-            }
-            steps {
-                sh """
-                    docker run \
-                    -v /var/lib/jenkins/workspace/pipelineProyecto \
-                    -e API_KEY='${HAWK_API_KEY}' \
-                    -e NO_COLOR=true \
-                    stackhawk/hawkscan
-                """
             }
         }
 
