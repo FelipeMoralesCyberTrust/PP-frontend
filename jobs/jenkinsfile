@@ -180,10 +180,10 @@ pipeline {
                 hawk_api_key = credentials('stackhawk-api-key')
             }
             steps {
-                sh '''docker run -v ${workspace}:/hawk:rw \
+                sh "docker run -v /var/lib/jenkins/workspace/pipelineProyecto:/hawk:rw \
                     -e API_KEY=${hawk_api_key} \
                     -e NO_COLOR=true \
-                    -t stackhawk/hawkscan'''
+                    -t stackhawk/hawkscan"
             }
         }
 
