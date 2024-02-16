@@ -181,8 +181,8 @@ pipeline {
             }
             steps {
                 sh "docker run -v /var/lib/jenkins/workspace/pipelineProyecto:/hawk:rw \
-                    -e API_KEY=${hawk_api_key} \
-                    -e NO_COLOR=true \
+                    -e api_key=${hawk_api_key} \
+                    -e no_color=true \
                     -t stackhawk/hawkscan"
             }
         }
