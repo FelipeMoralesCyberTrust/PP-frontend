@@ -1,0 +1,200 @@
+pipeline {
+    agent any
+
+    parameters {
+        string(name: 'name_container', defaultValue: 'felipemoralescybertrust', description: 'nombre del docker')
+        string(name: 'name_imagen_front', defaultValue: 'practicafrontct', description: 'nombre de la imagen del front')
+        string(name: 'tag_imagen', defaultValue: 'latest', description: 'etiqueta de la imagen')
+        //string(name: 'puerto_imagen', defaultValue: '81', description: 'puerto a publicar')
+        string(name: 'name_imagen_back', defaultValue: 'practicabackct',description: 'nombre de la imagen del back')
+    }
+
+    environment {
+        name_final_front = "${name_container}/${name_imagen_front}:${tag_imagen}"
+        name_final_back = "${name_container}/${name_imagen_back}:${tag_imagen}"
+        workspace = "/var/lib/jenkins/workspace/pipelineProyecto"
+    }
+
+    stages {
+        stage('Detener/Eliminar FrontEnd') {
+            steps {
+                script {
+                    //Eliminando contenedores
+                    def containerExists = bat(script: "docker ps -q --filter name=${name_imagen_front}", returnStdout: true).trim()
+                    if (containerExists.isEmpty()) {
+                        echo "El contenedor ${name_imagen_front} no existe. Continuar con Jenkins."                        
+                    }
+                    else {
+                        bat "docker stop ${name_imagen_front} || true"
+                        bat "docker rm ${name_imagen_front} || true"
+                    }
+                    //Eliminando imagenes
+                    def imageExists = bat(script: "docker images --filter reference=${name_container}/${name_imagen_front} --format '{{.ID}}'", returnStdout: true).trim()
+                    if(imageExists.isEmpty()){
+                        echo "La imagen ${name_container}/${name_imagen_front} no existe, continuar con Jenkins."
+                    }
+                    else{
+                        //bat "docker rmi ${name_container}/${name_imagen_front}"
+                        bat "docker rmi ${imageExists}"
+                    }
+                }
+            }
+        }
+
+        stage('Detener/Eliminar BackEnd') {
+            steps {
+                script {
+                    //Eliminando contenedores
+                    def containerExists = bat(script: "docker ps -q --filter name=${name_imagen_back}", returnStdout: true).trim()
+                    if (containerExists.isEmpty()) {
+                        echo "El contenedor ${name_imagen_back} no existe. Continuar con Jenkins."
+                    }
+                    else {
+                        bat "docker stop ${name_imagen_back} || true"
+                        bat "docker rm ${name_imagen_back} || true"
+                    }
+                    //Eliminando imagenes
+                    def imageExists = bat(script: "docker images --filter reference=${name_container}/${name_imagen_back} --format '{{.ID}}'", returnStdout: true).trim()
+                    if(imageExists.isEmpty()){
+                        echo "La imagen ${name_container}/${name_imagen_back} no existe, continuar con Jenkins."
+                    }
+                    else{
+                        //bat "docker rmi ${name_container}/${name_imagen_back}"
+                        bat "docker rmi ${imageExists}"
+                    }
+                }
+            }
+        }
+
+        stage('Verificar Repo 1') {
+            steps {
+                checkout([$class: 'GitSCM', branches: [[name: '*/main']], 
+                          doGenerateSubmoduleConfigurations: false, 
+                          extensions: [], 
+                          submoduleCfg: [], 
+                          userRemoteConfigs: [[credentialsId: 'TokenGitFelipe', url: 'https://github.com/FelipeMoralesCyberTrust/PP-frontend.git']]])
+            }
+        }
+        stage('Analisis Repo 1') {
+            steps {
+                script {
+                    def scannerHome = tool 'sonar-scanner';
+                    withSonarQubeEnv('SonarCloud') {
+                        withCredentials([string(credentialsId: 'SonarToJenkins', variable: 'SonarToJenkins')]) {
+                            bat "${scannerHome}/bin/sonar-scanner \
+                            -Dsonar.organization=felipemoralescybertrust \
+                            -Dsonar.projectKey=FelipeMoralesCyberTrust_PP-frontend \
+                            -Dsonar.sources=. \
+                            -Dsonar.host.url=https://sonarcloud.io \
+                            -Dsonar.login=${SonarToJenkins}"
+                        }
+                    }
+                }
+            }
+        }
+        stage('Quality Gate Repo 1') {
+            steps {
+                timeout(time: 1, unit: 'HOURS') {
+                    waitForQualityGate abortPipeline: true
+                }
+            }
+        }
+
+        stage('Build Repo 1') {
+            steps {
+                script {
+                    bat """
+                        docker build -t ${name_final_back} https://github.com/FelipeMoralesCyberTrust/PP-frontend.git
+                    """
+                }
+            }
+        }
+
+        stage('Verificar Repo 2') {
+            steps {
+                checkout([$class: 'GitSCM', branches: [[name: '*/main']], 
+                          doGenerateSubmoduleConfigurations: false, 
+                          extensions: [], 
+                          submoduleCfg: [], 
+                          userRemoteConfigs: [[credentialsId: 'TokenGitFelipe', url: 'https://github.com/FelipeMoralesCyberTrust/PP-backend.git']]])
+            }
+        }
+        stage('Analisis Repo 2') {
+            steps {
+                script {
+                    def scannerHome = tool 'sonar-scanner';
+                    withSonarQubeEnv('SonarCloud') {
+                        withCredentials([string(credentialsId: 'SonarToJenkins', variable: 'SonarToJenkins')]) {
+                            bat "${scannerHome}/bin/sonar-scanner \
+                            -Dsonar.organization=felipemoralescybertrust \
+                            -Dsonar.projectKey=FelipeMoralesCyberTrust_PP-backend \
+                            -Dsonar.sources=. \
+                            -Dsonar.host.url=https://sonarcloud.io \
+                            -Dsonar.login=${SonarToJenkins}"
+                        }
+                    }
+                }
+            }
+        }
+
+        stage('Quality Gate Repo 2') {
+            steps {
+                timeout(time: 1, unit: 'HOURS') {
+                    waitForQualityGate abortPipeline: true
+                }
+            }
+        }
+
+        stage('Build Repo 2') {
+            steps {
+                script {
+                    bat """
+                        docker build -t ${name_final_back} https://github.com/FelipeMoralesCyberTrust/PP-backend.git
+                    """
+                }
+            }
+        }
+        /*
+        stage('Procesar Resultados StackHawk'){
+            steps{
+                script{
+                    def response = httpRequest(url:'https://54.207.206.167:8080/job/pipelineProyecto', httpMode: 'POST', contentType:'APPLICATION_JSON')
+                    def datos = response.content
+                    if (datos.contains("Scan Completed")) {
+                        echo "El escaneo ha sido completado."
+                    } else if (datos.contains("Scan Errored")) {
+                        echo "Ocurrió un error durante el escaneo."
+                        error "Error durante el escaneo. Deteniendo el trabajo."
+                    }
+                }
+            }
+        }
+        */
+
+        stage ("Pull HawkScan Image") {
+            steps {
+                bat 'docker pull stackhawk/hawkscan:latest'
+            }
+        }
+        stage ("Run HawkScan Test") {
+            steps {
+                withCredentials([string(credentialsId:'stackhawk-api-key', variable: 'hawk_api_key')]){
+                    bat "docker run -v ${workspace}:/hawk:rw -t \
+                        -e api_key=${hawk_api_key} \
+                        -e no_color=true \
+                        stackhawk/hawkscan"
+                }
+            }
+        }
+
+        stage('Deploy') {
+            steps {
+                script {
+                    dir('/var/lib/jenkins/jobs/pipelineProyecto') {
+                        bat 'docker-compose -f docker-compose.yml up -d'
+                    }
+                } //C:/ProgramData/Jenkins/.jenkins/workspace/pipelineProyecto
+            }
+        }
+    }
+}
