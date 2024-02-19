@@ -110,7 +110,7 @@ pipeline {
             steps {
                 script {
                     bat """
-                        docker build -t ${name_final_back} https://github.com/FelipeMoralesCyberTrust/PP-frontend.git
+                        docker build -t ${name_final_front} https://github.com/FelipeMoralesCyberTrust/PP-frontend.git
                     """
                 }
             }
