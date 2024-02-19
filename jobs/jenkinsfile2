@@ -21,15 +21,15 @@ pipeline {
                 script {
                     //Eliminando contenedores
                     def containerExists = bat(script: "docker ps -a -q --filter name=${name_imagen_front}")
-                    echo "Longitud de containerExists: ${containerExists.length()}"
+                    /*echo "Longitud de containerExists: ${containerExists.length()}"
                     echo "Tipo de dato de containerExists: ${containerExists.getClass()}"
-                    echo "Valor de containerExists: ${containerExists}"
-                    if (containerExists == "") {         
-                        echo "El contenedor ${name_imagen_front} no existe. Continuar con Jenkins."                      
+                    echo "Valor de containerExists: ${containerExists}"*/
+                    if (containerExists != null) {
+                        bat "docker stop ${name_imagen_front}"
+                        bat "docker rm ${name_imagen_front}"                   
                     }
                     else {
-                        bat "docker stop ${name_imagen_front}"
-                        bat "docker rm ${name_imagen_front}"
+                        echo "El contenedor ${name_imagen_front} no existe. Continuar con Jenkins."
                     }
                     //Eliminando imagenes
                     def imageExists = bat(script: "docker images --filter reference=${name_container}/${name_imagen_front} --format '{{.ID}}'", returnStatus: true)
