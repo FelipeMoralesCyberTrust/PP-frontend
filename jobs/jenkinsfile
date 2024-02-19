@@ -147,9 +147,9 @@ pipeline {
                 echo "Directorio de trabajo actual: ${WORKSPACE}"
                 withCredentials([string(credentialsId:'stackhawk-api-key', variable: 'hawk_api_key')]){
                     bat '''
-                        docker run -v "${WORKSPACE}:/hawk:rw" -t \
-                        -e "API_KEY=${hawk_api_key}" \
-                        -e "NO_COLOR=true" \
+                        docker run -v /var/lib/jenkins/workspace/pipelineProyecto:/hawk:rw -t \
+                        -e api_key=${hawk_api_key} \
+                        -e no_color=true \
                         --name hawktest2 \
                         stackhawk/hawkscan
                     '''
