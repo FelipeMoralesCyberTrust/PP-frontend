@@ -103,10 +103,10 @@ pipeline {
         stage("Snyk Test Repo1"){
             steps{
                 script{
-                    withCredentials([string(credentialsId: 'SNYK_TOKEN', variable: 'SNYK_TOKEN')]){
+                    withCredentials([string(credentialsId: 'SNYKTOKEN', variable: 'SNYKTOKEN')]){
                         snykSecurity(
                             snykInstallation: 'SnykPlugin',
-                            snykTokenId: 'SNYK_TOKEN',
+                            snykTokenId: 'SNYKTOKEN',
                             failOnIssues: false,
                             monitorProjectOnBuild: true,
                             additionalArguments: "--container ${name_final_front} -d")
