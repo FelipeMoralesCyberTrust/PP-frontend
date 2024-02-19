@@ -16,53 +16,29 @@ pipeline {
     }
 
     stages {
-        stage('Detener/Eliminar FrontEnd') {
-            steps {
-                script {
-                    //Eliminando contenedores
-                    def containerExists = bat(script: "docker ps -q --filter name=${name_imagen_front}", returnStdout: true).trim()
-                    if (containerExists.isEmpty()) {
-                        echo "El contenedor ${name_imagen_front} no existe. Continuar con Jenkins."                        
-                    }
-                    else {
-                        sh "docker stop ${name_imagen_front} || true"
-                        sh "docker rm ${name_imagen_front} || true"
-                    }
-                    //Eliminando imagenes
-                    def imageExists = sh(script: "docker images --filter reference=${name_container}/${name_imagen_front} --format '{{.ID}}'", returnStdout: true).trim()
-                    if(imageExists.isEmpty()){
-                        echo "La imagen ${name_container}/${name_imagen_front} no existe, continuar con Jenkins."
-                    }
-                    else{
-                        //sh "docker rmi ${name_container}/${name_imagen_front}"
-                        sh "docker rmi ${imageExists}"
-                    }
+        stage("Eliminar todos los contenedores"){
+            steps{
+                script{
+                    //Eliminando contenedor frontend
+                    sh "docker stop ${name_imagen_front} || (echo 'sigue jenkins' && exit 0)"
+                    sh "docker rm ${name_imagen_front} || (echo 'sigue jenkins' && exit 0)"
+                    //eliminando imagen frontend
+                    sh "docker rmi ${name_container}/${name_imagen_front} || (echo 'sigue jenkins' && exit 0)"
+                    //Eliminando contenedor backend
+                    sh "docker stop ${name_imagen_back} || (echo 'sigue jenkins' && exit 0)"
+                    sh "docker rm ${name_imagen_back} || (echo 'sigue jenkins' && exit 0)"
+                    //Eliminando imagen backend
+                    sh "docker rmi ${name_container}/${name_imagen_back} || (echo 'sigue jenkins' && exit 0)"
+                    //Eliminando contenedor hawktest1
+                    sh "docker stop hawktest1 || (echo 'sigue jenkins' && exit 0)"
+                    sh "docker rm hawktest1 || (echo 'sigue jenkins' && exit 0)"
+                    //Eliminando imagen stackhank
+                    sh "docker rmi stackhawk/hawkscan || (echo 'sigue jenkins' && exit 0)"
+                    //Eliminando contenedor hawktest2
+                    sh "docker stop hawktest2 || (echo 'sigue jenkins' && exit 0)"
+                    sh "docker rm hawktest2 || (echo 'sigue jenkins' && exit 0)"
                 }
-            }
-        }
 
-        stage('Detener/Eliminar BackEnd') {
-            steps {
-                script {
-                    //Eliminando contenedores
-                    def containerExists = sh(script: "docker ps -q --filter name=${name_imagen_back}", returnStdout: true).trim()
-                    if (containerExists.isEmpty()) {
-                        echo "El contenedor ${name_imagen_back} no existe. Continuar con Jenkins."
-                    }
-                    else {
-                        sh "docker stop ${name_imagen_back} || true"
-                        sh "docker rm ${name_imagen_back} || true"
-                    }
-                    //Eliminando imagenes
-                    def imageExists = sh(script: "docker images --filter reference=${name_container}/${name_imagen_back} --format '{{.ID}}'", returnStdout: true).trim()
-                    if(imageExists.isEmpty()){
-                        echo "La imagen ${name_container}/${name_imagen_back} no existe, continuar con Jenkins."
-                    }
-                    else{
-                        //sh "docker rmi ${name_container}/${name_imagen_back}"
-                        sh "docker rmi ${imageExists}"
-                    }
-                }
             }
         }
 
@@ -106,6 +82,18 @@ pipeline {
                     sh """
                         docker build -t ${name_final_back} https://github.com/FelipeMoralesCyberTrust/PP-frontend.git
                     """
+                }
+            }
+        }
+        stage ("HawkScan Test Repo1") {
+            steps {
+                echo "Directorio de trabajo actual: ${WORKSPACE}"
+                withCredentials([string(credentialsId:'stackhawk-api-key', variable: 'hawk_api_key')]){
+                    sh """docker run -v ${WORKSPACE}:/hawk:rw -t \
+                        -e API_KEY=${hawk_api_key} \
+                        -e NO_COLOR=true \
+                        --name hawktest1 \
+                        stackhawk/hawkscan"""
                 }
             }
         }
@@ -154,39 +142,18 @@ pipeline {
                 }
             }
         }
-        /*
-        stage('Procesar Resultados StackHawk'){
-            steps{
-                script{
-                    def response = httpRequest(url:'https://54.207.206.167:8080/job/pipelineProyecto', httpMode: 'POST', contentType:'APPLICATION_JSON')
-                    def datos = response.content
-                    if (datos.contains("Scan Completed")) {
-                        echo "El escaneo ha sido completado."
-                    } else if (datos.contains("Scan Errored")) {
-                        echo "Ocurrió un error durante el escaneo."
-                        error "Error durante el escaneo. Deteniendo el trabajo."
-                    }
-                }
-            }
-        }
-        */
-
-        stage ("Pull HawkScan Image") {
+        stage ("HawkScan Test Repo2") {
             steps {
-                sh 'docker pull stackhawk/hawkscan:latest'
-            }
-        }
-        stage ("Run HawkScan Test") {
-            steps {
+                echo "Directorio de trabajo actual: ${WORKSPACE}"
                 withCredentials([string(credentialsId:'stackhawk-api-key', variable: 'hawk_api_key')]){
-                    sh "docker run -v ${workspace}:/hawk:rw -t \
-                        -e api_key=${hawk_api_key} \
-                        -e no_color=true \
-                        stackhawk/hawkscan"
+                    bat """docker run -v ${WORKSPACE}:/hawk:rw -t \
+                        -e API_KEY=${hawk_api_key} \
+                        -e NO_COLOR=true \
+                        --name hawktest2 \
+                        stackhawk/hawkscan"""
                 }
             }
         }
-
         stage('Deploy') {
             steps {
                 script {
