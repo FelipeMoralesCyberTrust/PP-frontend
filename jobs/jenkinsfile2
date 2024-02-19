@@ -21,9 +21,6 @@ pipeline {
                 script {
                     //Eliminando contenedores
                     def containerExists = bat(script: "docker ps -a -q --filter name=${name_imagen_front}")
-                    /*echo "Longitud de containerExists: ${containerExists.length()}"
-                    echo "Tipo de dato de containerExists: ${containerExists.getClass()}"
-                    echo "Valor de containerExists: ${containerExists}"*/
                     if (containerExists != null) {
                         bat "docker stop ${name_imagen_front}"
                         bat "docker rm ${name_imagen_front}"                   
@@ -32,12 +29,11 @@ pipeline {
                         echo "El contenedor ${name_imagen_front} no existe. Continuar con Jenkins."
                     }
                     //Eliminando imagenes
-                    def imageExists = bat(script: "docker images --filter reference=${name_container}/${name_imagen_front} --format '{{.ID}}'", returnStatus: true)
-                    if(imageExists == 0){                        
+                    def imageExists = bat(script: "docker images --filter reference=${name_container}/${name_imagen_front} --format '{{.ID}}'")
+                    if(imageExists != null){                        
                         bat "docker rmi ${name_container}/${name_imagen_front}"
                     }
                     else{
-                        //bat "docker rmi ${name_container}/${name_imagen_front}"
                         echo "La imagen ${name_container}/${name_imagen_front} no existe, continuar con Jenkins."
                     }
                 }
@@ -48,8 +44,8 @@ pipeline {
             steps {
                 script {
                     //Eliminando contenedores
-                    def containerExists = bat(script: "docker ps -a -q --filter name=${name_imagen_back}", returnStdout: true)
-                    if (containerExists.isEmpty()) {                        
+                    def containerExists = bat(script: "docker ps -a -q --filter name=${name_imagen_back}")
+                    if (containerExists != null) {                        
                         bat "docker stop ${name_imagen_back}"
                         bat "docker rm ${name_imagen_back}"
                     }
@@ -57,8 +53,8 @@ pipeline {
                         echo "El contenedor ${name_imagen_back} no existe. Continuar con Jenkins."
                     }
                     //Eliminando imagenes
-                    def imageExists = bat(script: "docker images --filter reference=${name_container}/${name_imagen_back} --format '{{.ID}}'", returnStatus: true)
-                    if(imageExists == 0){
+                    def imageExists = bat(script: "docker images --filter reference=${name_container}/${name_imagen_back} --format '{{.ID}}'")
+                    if(imageExists != null){
                         bat "docker rmi ${imageExists}"
                     }
                     else{
@@ -72,8 +68,8 @@ pipeline {
         stage("Detener HankTest1"){
             steps{
                 script{
-                    def containerExists = bat(script: "docker ps -a -q --filter name=hanktest1", returnStatus: true)
-                    if(containerExists == 0){
+                    def containerExists = bat(script: "docker ps -a -q --filter name=hanktest1")
+                    if(containerExists != null){
                         bat "docker stop hanktest1"
                         bat "docker rm hanktest1"
                     }
