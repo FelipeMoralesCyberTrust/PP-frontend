@@ -94,11 +94,14 @@ pipeline {
                     bat "docker rm ${name_imagen_back} || (echo 'sigue jenkins' && exit 0)"
                     //Eliminando imagen backend
                     bat "docker rmi ${name_container}/${name_imagen_back} || (echo 'sigue jenkins' && exit 0)"
-                    //Eliminando contenedor hanktest1
-                    bat "docker stop hanktest1 || (echo 'sigue jenkins' && exit 0)"
+                    //Eliminando contenedor hawktest1
+                    bat "docker stop hawktest1 || (echo 'sigue jenkins' && exit 0)"
                     bat "docker rm hawktest1 || (echo 'sigue jenkins' && exit 0)"
                     //Eliminando imagen stackhank
                     bat "docker rmi stackhawk/hawkscan || (echo 'sigue jenkins' && exit 0)"
+                    //Eliminando contenedor hawktest2
+                    bat "docker stop hawktest2 || (echo 'sigue jenkins' && exit 0)"
+                    bat "docker rm hawktest2 || (echo 'sigue jenkins' && exit 0)"
                 }
 
             }
