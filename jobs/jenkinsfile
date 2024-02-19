@@ -12,7 +12,7 @@ pipeline {
     environment {
         name_final_front = "${name_container}/${name_imagen_front}:${tag_imagen}"
         name_final_back = "${name_container}/${name_imagen_back}:${tag_imagen}"
-        workspace = "/var/lib/jenkins/workspace/pipelineProyecto"
+        //workspace = "/var/lib/jenkins/workspace/pipelineProyecto"
     }
 
     stages {
@@ -146,11 +146,13 @@ pipeline {
             steps {
                 echo "Directorio de trabajo actual: ${WORKSPACE}"
                 withCredentials([string(credentialsId:'stackhawk-api-key', variable: 'hawk_api_key')]){
-                    bat """docker run -v ${WORKSPACE}:/hawk:rw -t \
-                        -e API_KEY=${hawk_api_key} \
-                        -e NO_COLOR=true \
+                    bat '''
+                        docker run -v "${WORKSPACE}:/hawk:rw" -t \
+                        -e "API_KEY=${hawk_api_key}" \
+                        -e "NO_COLOR=true" \
                         --name hawktest2 \
-                        stackhawk/hawkscan"""
+                        stackhawk/hawkscan
+                    '''
                 }
             }
         }
