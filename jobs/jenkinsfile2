@@ -191,7 +191,7 @@ pipeline {
         stage('Deploy') {
             steps {
                 script {
-                    dir('C:\ProgramData\Jenkins\.jenkins\workspace\pipelineproyecto\jobs') {
+                    dir('C:/ProgramData/Jenkins/.jenkins/workspace/pipelineproyecto/jobs') {
                         bat 'docker-compose -f docker-compose.yml up -d'
                     }
                 } //C:/ProgramData/Jenkins/.jenkins/workspace/pipelineproyecto
