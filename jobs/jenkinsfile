@@ -103,12 +103,11 @@ pipeline {
         stage("Snyk Test Repo1"){
             steps{
                 script{
-                    withCredentials([string(credentialsId: 'SNYK_TOKEN', variable: 'SNYK_TOKEN'),
-                        string(credentialsId: 'IdSnyk', variable: 'IdSnyk')])
-                    def proyecto = 'FelipeMoralesCyberTrust/PP-frontend'
-                    def command = "snyk test --remote --org=${IdSnyk} --project-name=${proyecto} --token=${SNYK_TOKEN}"
-                    def salida = sh script: command, returnStdout: true
-                    println salida
+                    snykSecurity(
+                        withCredentials([string(credentialsId:'SNYK_TOKEN', variable: 'snyk_token')])
+                            snykInstallation: 'SnykPlugin'
+                            snykTokenId: '${snyk_token}'
+                    )
                 }
             }
         }
