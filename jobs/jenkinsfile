@@ -103,11 +103,12 @@ pipeline {
         stage("Snyk Test Repo1"){
             steps{
                 script{
-                    snykSecurity(
-                        withCredentials([string(credentialsId:'SNYK_TOKEN', variable: 'snyk_token')])
+                    withCredentials([string(credentialsId:'SNYK_TOKEN', variable: 'snyk_token')]){
+                        snykSecurity(
                             snykInstallation: 'SnykPlugin'
                             snykTokenId: '${snyk_token}'
-                    )
+                        )
+                    }
                 }
             }
         }
