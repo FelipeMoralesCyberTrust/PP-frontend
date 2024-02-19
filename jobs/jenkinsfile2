@@ -197,7 +197,7 @@ pipeline {
                     bat """docker run -v ${WORKSPACE}:/hawk:rw -t \
                         -e API_KEY=${hawk_api_key} \
                         -e NO_COLOR=true \
-                        --name hanktest2
+                        --name hanktest2 \
                         stackhawk/hawkscan"""
                 }
             }
