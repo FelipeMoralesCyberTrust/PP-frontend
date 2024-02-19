@@ -85,7 +85,7 @@ pipeline {
             steps{
                 script{
                     //Eliminando contenedor frontend
-                    bat "docker stop ${name_imagen_front} || echo 'sigue jenkins'"
+                    bat "docker stop ${name_imagen_front} || (echo 'sigue jenkins' && exit 0)"
                     bat "docker rm ${name_imagen_front} || echo 'sigue jenkins'"
                     //eliminando imagen frontend
                     bat "docker rmi ${name_container}/${name_imagen_front} || echo 'sigue jenkins'"
