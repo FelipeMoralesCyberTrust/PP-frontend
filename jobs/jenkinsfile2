@@ -20,7 +20,7 @@ pipeline {
             steps {
                 script {
                     //Eliminando contenedores
-                    def containerExists = bat(script: "docker ps -q --filter name=${name_imagen_front}", returnStatus: true).trim()
+                    def containerExists = bat(script: "docker ps -q --filter name=${name_imagen_front}", returnStatus: true)
                     echo "Valor de containerExists: ${containerExists}"
                     if (containerExists == "") {
                         echo "El contenedor ${name_imagen_front} no existe. Continuar con Jenkins."                        
