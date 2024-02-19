@@ -80,7 +80,7 @@ pipeline {
             steps {
                 script {
                     sh """
-                        docker build -t ${name_final_back} https://github.com/FelipeMoralesCyberTrust/PP-frontend.git
+                        docker build -t ${name_final_front} https://github.com/FelipeMoralesCyberTrust/PP-frontend.git
                     """
                 }
             }
@@ -108,7 +108,7 @@ pipeline {
                         snykTokenId: 'SNYK_TOKEN',
                         failOnIssues: false,
                         monitorProjectOnBuild: true,
-                        additionalArguments: '--all-projects --d')
+                        additionalArguments: '--container ${name_final_front} -d')
                 }
             }
         }
