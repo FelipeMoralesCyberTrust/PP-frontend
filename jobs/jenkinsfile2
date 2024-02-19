@@ -71,12 +71,12 @@ pipeline {
             steps{
                 script{
                     def containerExists = bat(script: "docker ps -a -q --filter name=hanktest1", returnStatus: true)
-                    if(containerExists.isEmpty()){
-                        echo "El contenedor hanktest1 no existe. Continuar con Jenkins"
-                    }
-                    else{
+                    if(containerExists == 0){
                         bat "docker stop hanktest1"
                         bat "docker rm hanktest1"
+                    }
+                    else{
+                        echo "El contenedor hanktest1 no existe. Continuar con Jenkins"
                     }
                 }
             }
