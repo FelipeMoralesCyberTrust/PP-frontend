@@ -100,7 +100,7 @@ pipeline {
             }
         }
 
-        stage(){
+        stage("Snyk Test Repo1"){
             steps{
                 script{
                     withCredentials([string(credentialsId: 'SNYK_TOKEN', variable: 'SNYK_TOKEN'),
