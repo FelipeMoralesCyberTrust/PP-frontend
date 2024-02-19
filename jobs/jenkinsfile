@@ -108,7 +108,7 @@ pipeline {
                         snykTokenId: 'SNYK_TOKEN',
                         failOnIssues: false,
                         monitorProjectOnBuild: true,
-                        additionalArguments: '--container ${name_final_front} -d')
+                        additionalArguments: "--container ${name_final_front} -d")
                 }
             }
         }
