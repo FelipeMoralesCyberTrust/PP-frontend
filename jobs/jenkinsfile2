@@ -24,7 +24,7 @@ pipeline {
                     echo "Valor de containerExists: ${containerExists}"
                     echo "Longitud de containerExists: ${containerExists.length()}"
                     echo "Tipo de dato de containerExists: ${containerExists.getClass()}"
-                    if (containerExists..trim() == "") {         
+                    if (containerExists.trim() == "") {         
                         echo "El contenedor ${name_imagen_front} no existe. Continuar con Jenkins."                      
                     }
                     else {
