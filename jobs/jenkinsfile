@@ -89,11 +89,13 @@ pipeline {
             steps {
                 echo "Directorio de trabajo actual: ${WORKSPACE}"
                 withCredentials([string(credentialsId:'stackhawk-api-key', variable: 'hawk_api_key')]){
-                    sh """docker run -v ${WORKSPACE}:/hawk:rw -t \
-                        -e API_KEY=${hawk_api_key} \
-                        -e NO_COLOR=true \
+                    sh '''
+                        docker run -v "${WORKSPACE}:/hawk:rw" -t \
+                        -e "API_KEY=${hawk_api_key}" \
+                        -e "NO_COLOR=true" \
                         --name hawktest1 \
-                        stackhawk/hawkscan"""
+                        stackhawk/hawkscan
+                    '''
                 }
             }
         }
