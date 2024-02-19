@@ -85,20 +85,20 @@ pipeline {
             steps{
                 script{
                     //Eliminando contenedor frontend
-                    bat "docker stop ${name_imagen_front} || sigue jenkins"
-                    bat "docker rm ${name_imagen_front} || sigue jenkins"
+                    bat "docker stop ${name_imagen_front} || echo 'sigue jenkins'"
+                    bat "docker rm ${name_imagen_front} || echo 'sigue jenkins'"
                     //eliminando imagen frontend
-                    bat "docker rmi ${name_container}/${name_imagen_front} || sigue jenkins"
+                    bat "docker rmi ${name_container}/${name_imagen_front} || echo 'sigue jenkins'"
                     //Eliminando contenedor backend
-                    bat "docker stop ${name_imagen_back} || sigue jenkins"
-                    bat "docker rm ${name_imagen_back} || sigue jenkins"
+                    bat "docker stop ${name_imagen_back} || echo 'sigue jenkins'"
+                    bat "docker rm ${name_imagen_back} || echo 'sigue jenkins'"
                     //Eliminando imagen backend
-                    bat "docker rmi ${name_container}/${name_imagen_back} || sigue jenkins"
+                    bat "docker rmi ${name_container}/${name_imagen_back} || echo 'sigue jenkins'"
                     //Eliminando contenedor hanktest1
-                    bat "docker stop hanktest1 || sigue jenkins"
-                    bat "docker rm hawktest1 || sigue jenkins"
+                    bat "docker stop hanktest1 || echo 'sigue jenkins'"
+                    bat "docker rm hawktest1 || echo 'sigue jenkins'"
                     //Eliminando imagen stackhank
-                    bat "docker rmi stackhawk/hawkscan || sigue jenkins"
+                    bat "docker rmi stackhawk/hawkscan || echo 'sigue jenkins'"
                 }
 
             }
