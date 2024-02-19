@@ -66,6 +66,11 @@ pipeline {
                 }
             }
         }
+        stage ("Pull HawkScan Image") {
+            steps {
+                bat 'docker pull stackhawk/hawkscan:latest'
+            }
+        }
 
         stage('Verificar Repo 1') {
             steps {
@@ -107,6 +112,18 @@ pipeline {
                     bat """
                         docker build -t ${name_final_back} https://github.com/FelipeMoralesCyberTrust/PP-frontend.git
                     """
+                }
+            }
+        }
+
+        stage ("HawkScan Test Repo1") {
+            steps {
+                echo "Directorio de trabajo actual: ${WORKSPACE}"
+                withCredentials([string(credentialsId:'stackhawk-api-key', variable: 'hawk_api_key')]){
+                    bat """docker run -v ${WORKSPACE}:/hawk:rw -t \
+                        -e API_KEY=${hawk_api_key} \
+                        -e NO_COLOR=true \
+                        stackhawk/hawkscan"""
                 }
             }
         }
@@ -171,23 +188,6 @@ pipeline {
             }
         }
         */
-
-        stage ("Pull HawkScan Image") {
-            steps {
-                bat 'docker pull stackhawk/hawkscan:latest'
-            }
-        }
-        stage ("Run HawkScan Test") {
-            steps {
-                echo "Directorio de trabajo actual: ${WORKSPACE}"
-                withCredentials([string(credentialsId:'stackhawk-api-key', variable: 'hawk_api_key')]){
-                    bat """docker run -v ${WORKSPACE}:/hawk:rw -t \
-                        -e API_KEY=${hawk_api_key} \
-                        -e NO_COLOR=true \
-                        stackhawk/hawkscan"""
-                }
-            }
-        }
 
         stage('Deploy') {
             steps {

@@ -1,14 +1,8 @@
 app:
-  -name: frontend
-    applicationId: 14c0d151-b84d-43e9-8f17-11b9ba802f91
-    host: http://example.com
-    env: Development
+  applicationId: 14c0d151-b84d-43e9-8f17-11b9ba802f91
+  host: http://example.com
+  env: Development
   
-  -name: backend
-    applicationId: 0410d3cc-5fb7-4967-9628-a5880d417f96
-    host: http://example.com
-    env: Development
-
 hawk:
   startupTimeoutMinutes: 1
   spider:
