@@ -25,8 +25,8 @@ pipeline {
                         echo "El contenedor ${name_imagen_front} no existe. Continuar con Jenkins."                        
                     }
                     else {
-                        bat "docker stop ${name_imagen_front} || true"
-                        bat "docker rm ${name_imagen_front} || true"
+                        bat "docker stop ${name_imagen_front}"
+                        bat "docker rm ${name_imagen_front}"
                     }
                     //Eliminando imagenes
                     def imageExists = bat(script: "docker images --filter reference=${name_container}/${name_imagen_front} --format '{{.ID}}'", returnStdout: true).trim()
@@ -50,8 +50,8 @@ pipeline {
                         echo "El contenedor ${name_imagen_back} no existe. Continuar con Jenkins."
                     }
                     else {
-                        bat "docker stop ${name_imagen_back} || true"
-                        bat "docker rm ${name_imagen_back} || true"
+                        bat "docker stop ${name_imagen_back}"
+                        bat "docker rm ${name_imagen_back}"
                     }
                     //Eliminando imagenes
                     def imageExists = bat(script: "docker images --filter reference=${name_container}/${name_imagen_back} --format '{{.ID}}'", returnStdout: true).trim()
