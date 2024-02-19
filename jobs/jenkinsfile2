@@ -66,6 +66,22 @@ pipeline {
                 }
             }
         }
+
+        stage("Detener HankTest1"){
+            steps{
+                script{
+                    def containerExists = bat(script: "docker ps -q --filter name=hanktest1", returnStatus: true)
+                    if(containerExists == 0){
+                        echo "El contenedor hanktest1 no existe. Continuar con Jenkins"
+                    }
+                    else{
+                        bat "docker stop hanktest1"
+                        bat "docker rm hanktest1"
+                    }
+                }
+            }
+        }
+
         stage ("Pull HawkScan Image") {
             steps {
                 bat 'docker pull stackhawk/hawkscan:latest'
