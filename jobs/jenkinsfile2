@@ -14,8 +14,8 @@ pipeline {
         name_final_back = "${name_container}/${name_imagen_back}:${tag_imagen}"
         //workspace = "/var/lib/jenkins/workspace/pipelineProyecto"
     }
-    /*
     stages {
+        /*
         stage('Detener/Eliminar FrontEnd') {
             steps {
                 script {
