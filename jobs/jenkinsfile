@@ -146,7 +146,7 @@ pipeline {
         }
         stage ("HawkScan Test Repo2") {
             steps {
-                echo "Directorio de trabajo actual: ${WORKSPACE}"
+                //echo "Directorio de trabajo actual: ${WORKSPACE}"
                 withCredentials([string(credentialsId:'stackhawk-api-key', variable: 'hawk_api_key')]){
                     bat '''
                         docker run -v "${WORKSPACE}:/hawk:rw" -t \
