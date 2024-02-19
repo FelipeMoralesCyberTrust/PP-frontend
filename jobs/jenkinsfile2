@@ -20,9 +20,9 @@ pipeline {
             steps {
                 script {
                     //Eliminando contenedores
-                    def containerExists = bat(script: "docker ps -a -q --filter name=${name_imagen_front}", returnStatus: true)
+                    def containerExists = bat(script: "docker ps -a -q --filter name=${name_imagen_front}", returnStdout: true).trim()
                     echo "Valor de containerExists: ${containerExists}"
-                    if (containerExists == 0) {                        
+                    if (containerExists.isEmpty()) {                        
                         bat "docker stop ${name_imagen_front}"
                         bat "docker rm ${name_imagen_front}"                       
                     }
