@@ -14,7 +14,7 @@ pipeline {
         name_final_back = "${name_container}/${name_imagen_back}:${tag_imagen}"
         //workspace = "/var/lib/jenkins/workspace/pipelineProyecto"
     }
-
+    /*
     stages {
         stage('Detener/Eliminar FrontEnd') {
             steps {
@@ -56,7 +56,7 @@ pipeline {
                     //Eliminando imagenes
                     def imageExists = bat(script: "docker images --filter reference=${name_container}/${name_imagen_back} --format '{{.ID}}'")
                     if(imageExists != null){
-                        bat "docker rmi ${imageExists}"
+                        bat "docker rmi ${name_container}/${name_imagen_back}
                     }
                     else{
                         //bat "docker rmi ${name_container}/${name_imagen_back}"
@@ -80,20 +80,48 @@ pipeline {
                 }
             }
         }
+        */
+        stage("Eliminar todos los contenedores"){
+            steps{
+                script{
+                    //Eliminando contenedor frontend
+                    bat "docker stop ${name_imagen_front} || sigue jenkins"
+                    bat "docker rm ${name_imagen_front} || sigue jenkins"
+                    //eliminando imagen frontend
+                    bat "docker rmi ${name_container}/${name_imagen_front} || sigue jenkins"
+                    //Eliminando contenedor backend
+                    bat "docker stop ${name_imagen_back} || sigue jenkins"
+                    bat "docker rm ${name_imagen_back} || sigue jenkins"
+                    //Eliminando imagen backend
+                    bat "docker rmi ${name_container}/${name_imagen_back} || sigue jenkins"
+                    //Eliminando contenedor hanktest1
+                    bat "docker stop hanktest1 || sigue jenkins"
+                    bat "docker rm hawktest1 || sigue jenkins"
+                    //Eliminando imagen stackhank
+                    bat "docker rmi stackhawk/hawkscan || sigue jenkins"
+                }
+
+            }
+        }
 
         stage ("Pull HawkScan Image") {
             steps {
-                bat 'docker pull stackhawk/hawkscan:latest'
+                script{
+                    bat 'docker pull stackhawk/hawkscan:latest'
+                }
+
             }
         }
 
         stage('Verificar Repo 1') {
             steps {
-                checkout([$class: 'GitSCM', branches: [[name: '*/main']], 
-                          doGenerateSubmoduleConfigurations: false, 
-                          extensions: [], 
-                          submoduleCfg: [], 
-                          userRemoteConfigs: [[credentialsId: 'TokenGitFelipe', url: 'https://github.com/FelipeMoralesCyberTrust/PP-frontend.git']]])
+                script{
+                    checkout([$class: 'GitSCM', branches: [[name: '*/main']], 
+                        doGenerateSubmoduleConfigurations: false, 
+                        extensions: [], 
+                        submoduleCfg: [], 
+                        userRemoteConfigs: [[credentialsId: 'TokenGitFelipe', url: 'https://github.com/FelipeMoralesCyberTrust/PP-frontend.git']]])
+                }
             }
         }
         stage('Analisis Repo 1') {
@@ -138,7 +166,7 @@ pipeline {
                     bat """docker run -v ${WORKSPACE}:/hawk:rw -t \
                         -e API_KEY=${hawk_api_key} \
                         -e NO_COLOR=true \
-                        --name hanktest1 \
+                        --name hawktest1 \
                         stackhawk/hawkscan"""
                 }
             }
@@ -196,7 +224,7 @@ pipeline {
                     bat """docker run -v ${WORKSPACE}:/hawk:rw -t \
                         -e API_KEY=${hawk_api_key} \
                         -e NO_COLOR=true \
-                        --name hanktest2 \
+                        --name hawktest2 \
                         stackhawk/hawkscan"""
                 }
             }
