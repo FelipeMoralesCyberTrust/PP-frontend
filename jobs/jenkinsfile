@@ -100,6 +100,19 @@ pipeline {
             }
         }
 
+        stage(){
+            steps{
+                script{
+                    withCredentials([string(credentialsId: 'SNYK_TOKEN', variable: 'SNYK_TOKEN'),
+                        string(credentialsId: 'IdSnyk', variable: 'IdSnyk')])
+                    def proyecto = 'FelipeMoralesCyberTrust/PP-frontend'
+                    def command = "snyk test --remote --org=${IdSnyk} --project-name=${proyecto} --token=${SNYK_TOKEN}"
+                    def salida = sh script: command, returnStdout: true
+                    println salida
+                }
+            }
+        }
+
         stage('Verificar Repo 2') {
             steps {
                 checkout([$class: 'GitSCM', branches: [[name: '*/main']], 
