@@ -20,7 +20,7 @@ pipeline {
             steps {
                 script {
                     //Eliminando contenedores
-                    def containerExists = bat(script: "docker ps -a -q --filter name=${name_imagen_front}")
+                    def containerExists = bat(script: 'docker ps -a -q --filter name=${name_imagen_front}')
                     if (containerExists != null) {
                         bat "docker stop ${name_imagen_front}"
                         bat "docker rm ${name_imagen_front}"                   
