@@ -20,7 +20,7 @@ pipeline {
             steps {
                 script {
                     //Eliminando contenedores
-                    def containerExists = bat(script: "docker ps -a -q --filter name=${name_imagen_front}", returnStatus: true).trim()
+                    def containerExists = bat(script: "docker ps -a -q --filter name=${name_imagen_front}", returnStatus: true)
                     echo "Longitud de containerExists: ${containerExists.length()}"
                     echo "Tipo de dato de containerExists: ${containerExists.getClass()}"
                     echo "Valor de containerExists: ${containerExists}"
@@ -29,7 +29,7 @@ pipeline {
                     }
                     else {
                         bat "docker stop ${name_imagen_front}"
-                        bat "docker rm ${name_imagen_front}" 
+                        bat "docker rm ${name_imagen_front}"
                     }
                     //Eliminando imagenes
                     def imageExists = bat(script: "docker images --filter reference=${name_container}/${name_imagen_front} --format '{{.ID}}'", returnStatus: true)
