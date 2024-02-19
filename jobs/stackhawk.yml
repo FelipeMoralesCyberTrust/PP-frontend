@@ -1,5 +1,5 @@
 app:
-  applicationId: e1552535-9d61-4546-852d-751b2f0919d4
+  applicationId: 14c0d151-b84d-43e9-8f17-11b9ba802f91
   host: http://example.com
   env: Development
 
@@ -7,3 +7,4 @@ hawk:
   startupTimeoutMinutes: 1
   spider:
     base: false
+ 
