@@ -148,7 +148,7 @@ pipeline {
             steps {
                 //echo "Directorio de trabajo actual: ${WORKSPACE}"
                 withCredentials([string(credentialsId:'stackhawk-api-key', variable: 'hawk_api_key')]){
-                    bat '''
+                    sh '''
                         docker run -v "${WORKSPACE}:/hawk:rw" -t \
                         -e "API_KEY=${hawk_api_key}" \
                         -e "NO_COLOR=true" \
