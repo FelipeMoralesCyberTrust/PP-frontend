@@ -15,72 +15,6 @@ pipeline {
         //workspace = "/var/lib/jenkins/workspace/pipelineProyecto"
     }
     stages {
-        /*
-        stage('Detener/Eliminar FrontEnd') {
-            steps {
-                script {
-                    //Eliminando contenedores
-                    def containerExists = bat(script: 'docker ps -a -q --filter name=${name_imagen_front}')
-                    if (containerExists != null) {
-                        bat "docker stop ${name_imagen_front}"
-                        bat "docker rm ${name_imagen_front}"                   
-                    }
-                    else {
-                        echo "El contenedor ${name_imagen_front} no existe. Continuar con Jenkins."
-                    }
-                    //Eliminando imagenes
-                    def imageExists = bat(script: "docker images --filter reference=${name_container}/${name_imagen_front} --format '{{.ID}}'").trim()
-                    echo "El valor es este <> ${imageExists} <>"
-                    if(imageExists != null){                        
-                        bat "docker rmi ${name_container}/${name_imagen_front}"
-                    }
-                    else{
-                        echo "La imagen ${name_container}/${name_imagen_front} no existe, continuar con Jenkins."
-                    }
-                }
-            }
-        }
-
-        stage('Detener/Eliminar BackEnd') {
-            steps {
-                script {
-                    //Eliminando contenedores
-                    def containerExists = bat(script: "docker ps -a -q --filter name=${name_imagen_back}")
-                    if (containerExists != null) {
-                        bat "docker stop ${name_imagen_back}"
-                        bat "docker rm ${name_imagen_back}"
-                    }
-                    else {
-                        echo "El contenedor ${name_imagen_back} no existe. Continuar con Jenkins."
-                    }
-                    //Eliminando imagenes
-                    def imageExists = bat(script: "docker images --filter reference=${name_container}/${name_imagen_back} --format '{{.ID}}'")
-                    if(imageExists != null){
-                        bat "docker rmi ${name_container}/${name_imagen_back}
-                    }
-                    else{
-                        //bat "docker rmi ${name_container}/${name_imagen_back}"
-                        echo "La imagen ${name_container}/${name_imagen_back} no existe, continuar con Jenkins."
-                    }
-                }
-            }
-        }
-
-        stage("Detener HankTest1"){
-            steps{
-                script{
-                    def containerExists = bat(script: "docker ps -a -q --filter name=hanktest1")
-                    if(containerExists != null){
-                        bat "docker stop hanktest1"
-                        bat "docker rm hanktest1"
-                    }
-                    else{
-                        echo "El contenedor hanktest1 no existe. Continuar con Jenkins"
-                    }
-                }
-            }
-        }
-        */
         stage("Eliminar todos los contenedores"){
             steps{
                 script{
@@ -232,22 +166,6 @@ pipeline {
                 }
             }
         }
-        /*
-        stage('Procesar Resultados StackHawk'){
-            steps{
-                script{
-                    def response = httpRequest(url:'https://54.207.206.167:8080/job/pipelineProyecto', httpMode: 'POST', contentType:'APPLICATION_JSON')
-                    def datos = response.content
-                    if (datos.contains("Scan Completed")) {
-                        echo "El escaneo ha sido completado."
-                    } else if (datos.contains("Scan Errored")) {
-                        echo "Ocurrió un error durante el escaneo."
-                        error "Error durante el escaneo. Deteniendo el trabajo."
-                    }
-                }
-            }
-        }
-        */
 
         stage('Deploy') {
             steps {
