@@ -105,7 +105,7 @@ pipeline {
                 script{
                     withCredentials([string(credentialsId:'SNYK_TOKEN', variable: 'snyk_token')]){
                         snykSecurity(
-                            snykInstallation: 'SnykPlugin'
+                            snykInstallation: 'SnykPlugin',
                             snykTokenId: '${snyk_token}'
                         )
                     }
