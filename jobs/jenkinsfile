@@ -104,7 +104,7 @@ pipeline {
             steps{                
                 snykSecurity(
                     snykInstallation: 'SnykPlugin',
-                    snykTokenId: 'f3995448-4066-4d0e-8dc5-e20a69396bf6',
+                    snykTokenId: ${snyktoken},
                     failOnIssues: false,
                     monitorProjectOnBuild: true,
                     additionalArguments: "--container ${name_final_front} -d")
@@ -113,7 +113,7 @@ pipeline {
         stage("snyk test image"){
             steps{
                 script{
-                    sh "snyk auth ${SNYKTOKEN}"
+                    sh "snyk auth ${snyktoken}"
                     sh "snyk container test  ${name_final_front}"
                 }
             }
