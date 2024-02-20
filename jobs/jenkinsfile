@@ -110,6 +110,7 @@ pipeline {
                     additionalArguments: "--container ${name_final_front} -d")
             }
         }
+        /*
         stage("snyk test image"){
             steps{
                 script{
@@ -117,7 +118,7 @@ pipeline {
                     sh "snyk container test  ${name_final_front}"
                 }
             }
-        }
+        }*/
 
 
 
@@ -177,6 +178,16 @@ pipeline {
                         stackhawk/hawkscan
                     '''
                 }
+            }
+        }
+        stage("Snyk Test Repo2"){
+            steps{                
+                snykSecurity(
+                    snykInstallation: 'SnykPlugin',
+                    snykTokenId: 'snyktoken',
+                    failOnIssues: false,
+                    monitorProjectOnBuild: true,
+                    additionalArguments: "--container ${name_final_back} -d")
             }
         }
         stage('Deploy') {
