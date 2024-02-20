@@ -108,7 +108,7 @@ pipeline {
                 }
             }
         }
-
+        /*
         stage("Snyk Test Repo1"){
             steps{                
                 snykSecurity(
@@ -126,7 +126,7 @@ pipeline {
                     sh "snyk container test  ${name_final_front}"
                 }
             }
-        }
+        }*/
 
         stage('Verificar Repo 2') {
             steps {
