@@ -99,7 +99,7 @@ pipeline {
                 }
             }
         }
-
+        /*
         stage("Snyk Test Repo1"){
             steps{                
                 snykSecurity(
@@ -110,7 +110,16 @@ pipeline {
                     monitorProjectOnBuild: true,
                     additionalArguments: "--container ${name_final_front} -d")
             }
+        }*/
+        stage("snyk test image"){
+            steps{
+                script{
+                    sh "snyk container test  ${name_final_front}"
+                }
+            }
         }
+
+
 
         stage('Verificar Repo 2') {
             steps {
