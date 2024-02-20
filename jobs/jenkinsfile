@@ -105,7 +105,7 @@ pipeline {
                 snykSecurity(
                     snykInstallation: 'SnykPlugin',
                     //snykTokenId: 'f3995448-4066-4d0e-8dc5-e20a69396bf6',
-                    snyk auth: 'f3995448-4066-4d0e-8dc5-e20a69396bf6'
+                    snykAuth: 'f3995448-4066-4d0e-8dc5-e20a69396bf6'
                     failOnIssues: false,
                     monitorProjectOnBuild: true,
                     additionalArguments: "--container ${name_final_front} -d")
