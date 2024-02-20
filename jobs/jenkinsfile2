@@ -109,6 +109,8 @@ pipeline {
             }
         }
 
+        
+
         stage('Verificar Repo 2') {
             steps {
                 checkout([$class: 'GitSCM', branches: [[name: '*/main']], 
