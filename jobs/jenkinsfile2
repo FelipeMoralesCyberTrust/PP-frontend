@@ -108,6 +108,25 @@ pipeline {
                 }
             }
         }
+        /*
+        stage("Snyk Test Repo1"){
+            steps{                
+                snykSecurity(
+                    snykInstallation: 'SnykPlugin',
+                    snykTokenId: "f3995448-4066-4d0e-8dc5-e20a69396bf6",
+                    failOnIssues: false,
+                    monitorProjectOnBuild: true,
+                    additionalArguments: "--container ${name_final_front} -d")
+            }
+        }
+        stage("snyk test image"){
+            steps{
+                script{
+                    sh "snyk auth 'snyktoken'"
+                    sh "snyk container test  ${name_final_front}"
+                }
+            }
+        }*/
 
         stage('Verificar Repo 2') {
             steps {
