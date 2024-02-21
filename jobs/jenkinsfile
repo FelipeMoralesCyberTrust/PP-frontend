@@ -109,7 +109,7 @@ pipeline {
                         snykInstallation: 'SnykPlugin',
                         snykTokenId: 'snyktoken',
                         severityThreshold: "critical",
-                        codeSeverityThreshold: "high",
+                        //codeSeverityThreshold: "high",
                         failOnIssues: true,
                         monitorProjectOnBuild: false,
                         additionalArguments: additionalArgs)
