@@ -104,13 +104,13 @@ pipeline {
             steps{
                 script{    
                     def githubRepoUrl = 'https://github.com/FelipeMoralesCyberTrust/PP-frontend.git'
-                    def additionalArgs = "--github ${githubRepoUrl}"  
+                    def additionalArgs = "--github ${githubRepoUrl} --severity-threshold=critical"  
                     snykSecurity(
                         snykInstallation: 'SnykPlugin',
                         snykTokenId: 'snyktoken',
-                        severityThreshold: "critical",
+                        //severityThreshold: "critical",
                         failOnIssues: true,
-                        monitorProjectOnBuild: true,
+                        monitorProjectOnBuild: false,
                         additionalArguments: additionalArgs)
                 }
             }
