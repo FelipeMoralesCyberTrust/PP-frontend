@@ -108,7 +108,7 @@ pipeline {
                     snykSecurity(
                         snykInstallation: 'SnykPlugin',
                         snykTokenId: 'snyktoken',
-                        severityThreshold: high,
+                        severityThreshold: 'high',
                         failOnIssues: true,
                         monitorProjectOnBuild: true,
                         additionalArguments: "--container ${name_final_front} -d")
