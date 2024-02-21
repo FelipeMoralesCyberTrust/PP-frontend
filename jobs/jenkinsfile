@@ -111,7 +111,7 @@ pipeline {
                         severityThreshold: 'high',
                         failOnIssues: true,
                         monitorProjectOnBuild: true,
-                        additionalArguments: "--container ${name_final_front} -d")
+                        additionalArguments: additionalArgs)
                 }
             }
         }
@@ -186,13 +186,18 @@ pipeline {
             }
         }
         stage("Snyk Test Repo2"){
-            steps{                
-                snykSecurity(
-                    snykInstallation: 'SnykPlugin',
-                    snykTokenId: 'snyktoken',
-                    failOnIssues: false,
-                    monitorProjectOnBuild: true,
-                    additionalArguments: "--container ${name_final_back} -d")
+            steps{
+                script{
+                    def githubRepoUrl = 'https://github.com/FelipeMoralesCyberTrust/PP-backend.git'
+                    def additionalArgs = "--github ${githubRepoUrl}"
+                    snykSecurity(
+                        snykInstallation: 'SnykPlugin',
+                        snykTokenId: 'snyktoken',
+                        severityThreshold: 'high',
+                        failOnIssues: true,
+                        monitorProjectOnBuild: true,
+                        additionalArguments: additionalArgs)
+                }
             }
         }
         stage('Deploy') {
