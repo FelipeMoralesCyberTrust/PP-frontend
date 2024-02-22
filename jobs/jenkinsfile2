@@ -111,7 +111,9 @@ pipeline {
         
         stage("Snyk Test Repo1"){
             steps{         
-                script{       
+                script{
+                    def githubRepoUrl = 'https://github.com/FelipeMoralesCyberTrust/PP-frontend.git'
+                    def additionalArgs = "--github ${githubRepoUrl}"
                     snykSecurity(
                         snykInstallation: 'SnykPlugin',
                         snykTokenId: "snyktoken",
@@ -119,7 +121,7 @@ pipeline {
                         codeSeverityThreshold: "high",
                         failOnIssues: false,
                         monitorProjectOnBuild: true,
-                        additionalArguments: "--container ${name_final_front} -d")
+                        additionalArguments: additionalArgs)
                     
                 }
             }
@@ -179,6 +181,22 @@ pipeline {
                         -e NO_COLOR=true \
                         --name hawktest2 \
                         stackhawk/hawkscan"""
+                }
+            }
+        }
+        stage("Snyk Test Repo2"){
+            steps{
+                script{
+                    def githubRepoUrl = 'https://github.com/FelipeMoralesCyberTrust/PP-backend.git'
+                    def additionalArgs = "--github ${githubRepoUrl}"
+                    snykSecurity(
+                        snykInstallation: 'SnykPlugin',
+                        snykTokenId: 'snyktoken',
+                        severityThreshold: "high",
+                        codeSeverityThreshold: "high",
+                        failOnIssues: false,
+                        monitorProjectOnBuild: true,
+                        additionalArguments: additionalArgs)
                 }
             }
         }
