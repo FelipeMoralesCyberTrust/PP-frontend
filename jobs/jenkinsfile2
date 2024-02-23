@@ -118,9 +118,9 @@ pipeline {
                         snykInstallation: 'SnykPlugin',
                         snykTokenId: "snyktoken",
                         severityThreshold: "critical",
-                        codeSeverityThreshold: "high",
-                        failOnIssues: false,
-                        failOnError: false,
+                        //codeSeverityThreshold: "high",
+                        failOnIssues: true,
+                        //failOnError: true,
                         monitorProjectOnBuild: true,
                         additionalArguments: "--github 'https://github.com/FelipeMoralesCyberTrust/PP-frontend.git'")
                     
