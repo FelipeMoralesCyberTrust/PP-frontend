@@ -125,7 +125,7 @@ pipeline {
                         severity: "--severity-Threshold: medium",
                         failOnIssues: true,
                         monitorProjectOnBuild: true, 
-                        additionalArguments: "--code '${name_final_front}'")
+                        additionalArguments: "--container '${name_final_front}'")
 
                     if(snykResult.contains("medium severity")){
                         error("Se encontaron vulnerabilidades criticas.")
