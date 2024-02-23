@@ -118,17 +118,18 @@ pipeline {
         
         stage("Snyk Test Repo1"){
             steps{
-                script{    
-                    //def githubRepoUrl = 'https://github.com/FelipeMoralesCyberTrust/PP-frontend.git'
-                    //def additionalArgs = "--github ${githubRepoUrl}"  
+                script{  
                     snykSecurity(
-                        snykInstallation: 'SnykPlugin',
+                        def snykResult = snykInstallation: 'SnykPlugin',
                         snykTokenId: 'snyktoken',
-                        severityThreshold: "high",
-                        //codeSeverityThreshold: "high",
+                        severity: "--severity-Threshold: medium",
                         failOnIssues: false,
                         monitorProjectOnBuild: false, 
                         additionalArguments: "--code '${name_final_front}'")
+
+                    if(snykResult.contains("medium severity")){
+                        error("Se encontaron vulnerabilidades criticas.")
+                    }
                 }
             }
         }
@@ -208,12 +209,12 @@ pipeline {
                     def snykResult = snykSecurity(
                         snykInstallation: 'SnykPlugin',
                         snykTokenId: "snyktoken",
-                        severity: "--severity-Threshold=critical",
+                        severity: "--severity-Threshold=medium",
                         failOnIssues: false,
-                        monitorProjectOnBuild: true,
+                        monitorProjectOnBuild: false,
                         additionalArguments: "--container '${name_final_back}'")
                     
-                    if (snykResult.contains("critical severity")) {
+                    if (snykResult.contains("medium severity")) {
                         error('Se encontraron vulnerabilidades críticas. Deteniendo el pipeline.')
                     }
                 }
