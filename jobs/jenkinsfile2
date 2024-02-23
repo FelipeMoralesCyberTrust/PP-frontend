@@ -121,7 +121,7 @@ pipeline {
                         //codeSeverityThreshold: "high",
                         failOnIssues: true,
                         monitorProjectOnBuild: false,
-                        additionalArguments: '--docker ${name_final_front}')
+                        additionalArguments: "--container 'https://github.com/FelipeMoralesCyberTrust/PP-frontend.git' -d")
                     
                 }
             }
