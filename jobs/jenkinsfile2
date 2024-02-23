@@ -194,10 +194,10 @@ pipeline {
                         snykTokenId: "snyktoken",
                         severityThreshold: "critical",
                         codeSeverityThreshold: "high",
-                        failOnIssues: false,
-                        failOnError: false,
+                        failOnIssues: true,
+                        //failOnError: false,
                         monitorProjectOnBuild: true,
-                        additionalArguments: "--github 'https://github.com/FelipeMoralesCyberTrust/PP-backend.git'")
+                        additionalArguments: "--container '${name_final_back}'")
                 }
             }
         }
