@@ -112,7 +112,7 @@ pipeline {
                         //codeSeverityThreshold: "high",
                         failOnIssues: false,
                         monitorProjectOnBuild: false, 
-                        additionalArguments: '--code ${name_final_front}')
+                        additionalArguments: "--code '${name_final_front}'")
                 }
             }
         }
