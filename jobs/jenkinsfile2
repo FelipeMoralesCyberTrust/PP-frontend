@@ -122,7 +122,7 @@ pipeline {
                         failOnIssues: true,
                         //failOnError: true,
                         monitorProjectOnBuild: true,
-                        additionalArguments: "--github 'https://github.com/FelipeMoralesCyberTrust/PP-frontend.git'")
+                        additionalArguments: "--code 'https://github.com/FelipeMoralesCyberTrust/PP-frontend.git' -debug")
                     
                 }
             }
