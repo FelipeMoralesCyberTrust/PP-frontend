@@ -189,16 +189,18 @@ pipeline {
         stage("Snyk Test Repo2"){
             steps{
                 script{
-                    def githubRepoUrl = 'https://github.com/FelipeMoralesCyberTrust/PP-backend.git'
-                    def additionalArgs = "--github ${githubRepoUrl}"
+                    //def githubRepoUrl = 'https://github.com/FelipeMoralesCyberTrust/PP-backend.git'
+                    //def additionalArgs = "--github ${githubRepoUrl}"
                     snykSecurity(
                         snykInstallation: 'SnykPlugin',
-                        snykTokenId: 'snyktoken',
+                        snykTokenId: "snyktoken",
+                        severity: "high",
                         severityThreshold: "high",
                         codeSeverityThreshold: "high",
                         failOnIssues: false,
-                        monitorProjectOnBuild: true,
-                        additionalArguments: additionalArgs)
+                        failOnError: false,
+                        monitorProjectOnBuild: false,
+                        additionalArguments: "--github 'https://github.com/FelipeMoralesCyberTrust/PP-backend.git'")
                 }
             }
         }
