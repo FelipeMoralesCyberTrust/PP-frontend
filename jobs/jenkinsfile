@@ -41,7 +41,7 @@ pipeline {
                 }
 
             }
-        }
+        }/*
         stage ("Pull HawkScan Image") {
             steps {
                 script{ //pull de la imagen docker stackhawk/hawkscan que es basicamente el scanner de stackhak
@@ -49,7 +49,7 @@ pipeline {
                 }
 
             }
-        }
+        }*/
         // Etapa para verificar que el repositorio existe y hay acceso por parte de jenkins a éste.
         stage('Verificar Repo 1') {
             steps {
