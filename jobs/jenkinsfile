@@ -5,17 +5,18 @@ pipeline {
         string(name: 'name_container', defaultValue: 'felipemoralescybertrust', description: 'nombre del docker')
         string(name: 'name_imagen_front', defaultValue: 'practicafrontct', description: 'nombre de la imagen del front')
         string(name: 'tag_imagen', defaultValue: 'latest', description: 'etiqueta de la imagen')
-        //string(name: 'puerto_imagen', defaultValue: '81', description: 'puerto a publicar')
         string(name: 'name_imagen_back', defaultValue: 'practicabackct',description: 'nombre de la imagen del back')
     }
 
     environment {
         name_final_front = "${name_container}/${name_imagen_front}:${tag_imagen}"
         name_final_back = "${name_container}/${name_imagen_back}:${tag_imagen}"
-        //workspace = "/var/lib/jenkins/workspace/pipelineProyecto"
     }
 
     stages {
+        //Etapa para eliminar contenedores e imagenes
+        //Eliminar contenedores para que los cambios se generen en el despliegue
+        //Eliminar imagenes para que no se creen duplicados.
         stage("Eliminar todos los contenedores"){
             steps{
                 script{
@@ -41,54 +42,66 @@ pipeline {
 
             }
         }
+        stage ("Pull HawkScan Image") {
+            steps {
+                script{ //pull de la imagen docker stackhawk/hawkscan que es basicamente el scanner de stackhak
+                    bat 'docker pull stackhawk/hawkscan:latest'
+                }
 
+            }
+        }
+        // Etapa para verificar que el repositorio existe y hay acceso por parte de jenkins a éste.
         stage('Verificar Repo 1') {
             steps {
-                checkout([$class: 'GitSCM', branches: [[name: '*/main']], 
-                          doGenerateSubmoduleConfigurations: false, 
-                          extensions: [], 
-                          submoduleCfg: [], 
-                          userRemoteConfigs: [[credentialsId: 'TokenGitFelipe', url: 'https://github.com/FelipeMoralesCyberTrust/PP-frontend.git']]])
+                checkout([$class: 'GitSCM', branches: [[name: '*/main']],                       //Jenkins utiliza el plugin GitSCM e indica que se debe verificar la rama main
+                          doGenerateSubmoduleConfigurations: false,                             //Evita generar configuraciones para submódulos.
+                          extensions: [],                                                       //No se utilizan extensiones adicionales en esta configuración.
+                          submoduleCfg: [],                                                     //No se proporciona configuración específica para submódulos.
+                          userRemoteConfigs: [[credentialsId: 'TokenGitFelipe',                 //Se utiliza un ID de credencial llamado 'TokenGitFelipe' para la autenticación.
+                          url: 'https://github.com/FelipeMoralesCyberTrust/PP-frontend.git']]]) //Se especifica la URL del repositorio Git
             }
         }
         stage('Analisis Repo 1') {
             steps {
                 script {
-                    def scannerHome = tool 'sonar-scanner';
-                    withSonarQubeEnv('SonarCloud') {
-                        withCredentials([string(credentialsId: 'SonarToJenkins', variable: 'SonarToJenkins')]) {
-                            sh "${scannerHome}/bin/sonar-scanner \
-                            -Dsonar.organization=felipemoralescybertrust \
+                    def scannerHome = tool 'sonar-scanner';                                                         //Se establece la ubicación del SonarQube Scanner en la variable scannerHome utilizando la herramienta registrada en Jenkins con el nombre 'sonar-scanner'.
+                    withSonarQubeEnv('SonarCloud') {                                                                //Se utiliza el plugin withSonarQubeEnv para configurar el entorno de SonarQube llamado 'SonarCloud'.
+                        withCredentials([string(credentialsId: 'SonarToJenkins', variable: 'SonarToJenkins')]) {    //Se utiliza el plugin withCredentials para proporcionar las credenciales necesarias para autenticarse con SonarQube.
+                            sh "${scannerHome}/bin/sonar-scanner \                                                  
+                            -Dsonar.organization=felipemoralescybertrust \                                          
                             -Dsonar.projectKey=FelipeMoralesCyberTrust_PP-frontend \
                             -Dsonar.sources=. \
                             -Dsonar.host.url=https://sonarcloud.io \
                             -Dsonar.login=${SonarToJenkins}"
-                        }
+                        }                                                                                           //Se ejecuta el comando del SonarQube Scanner con los parámetros necesarios,
+                                                                                                                    //incluyendo la organización, la clave del proyecto, la ubicación del código fuente,
+                                                                                                                    //la URL de SonarCloud y la autenticación mediante el token almacenado en SonarToJenkins.
                     }
                 }
             }
         }
         stage('Quality Gate Repo 1') {
             steps {
-                timeout(time: 1, unit: 'HOURS') {
-                    waitForQualityGate abortPipeline: true
+                timeout(time: 1, unit: 'HOURS') {           //Estable que el QualityGate del scaneo de la estapa Analisis Repo 1 debe esperar a lo mucho 1 hora
+                    waitForQualityGate abortPipeline: true  //Si el Quality Gate es aprobado, entonces se avanza a la siguiente etapa
                 }
             }
         }
 
         stage('Build Repo 1') {
             steps {
-                script {
+                script {    //Se crea la imagen docker utilizando el nombre creado en enviroment y el repositorio que debe copiar
                     sh """
                         docker build -t ${name_final_front} https://github.com/FelipeMoralesCyberTrust/PP-frontend.git
                     """
-                }
+                }   //NOTA: si el repositorio que se quiere construir esta privado en github, se debe utilizar usuario y contraseña de la siguiente forma
+                    //docker build -t ${name_final_front} https://${USUARIO}:${CONTRASENA}@github...(resto del repositorio)
+                    // ${USUARIO} y ${CONTRASENA} son credenciales creadas en jenkins.
             }
         }
         stage ("HawkScan Test Repo1") {
             steps {
-                echo "Directorio de trabajo actual: ${WORKSPACE}"
-                withCredentials([string(credentialsId:'stackhawk-api-key', variable: 'hawk_api_key')]){
+                withCredentials([string(credentialsId:'stackhawk-api-key', variable: 'hawk_api_key')]){ //Permite el uso seguro de credenciales almacenadas en Jenkins.
                     sh '''
                         docker run -v "${WORKSPACE}:/hawk:rw" -t \
                         -e "API_KEY=${hawk_api_key}" \
@@ -96,20 +109,26 @@ pipeline {
                         --name hawktest1 \
                         stackhawk/hawkscan
                     '''
-                }
-            }
-        }
+                }   //Inicia un contenedor Docker con la imagen de HawkScan
+                    //Monta el directorio de trabajo de Jenkins en el directorio '/hawk' dentro del contenedor para analizar los archivos del proyecto.
+            }       //Pasa la variable de entorno 'API_KEY' al contenedor con el valor de la clave API proporcionada por las credenciales.
+                    //Configura HawkScan para no usar colores en la salida, lo cual es útil para entornos de Jenkins.
+                    //Asigna un nombre al contenedor como 'hawktest1'.
+        }           
         
         stage("Snyk Test Repo1"){
             steps{
-                script{  
+                script{    
+                    //def githubRepoUrl = 'https://github.com/FelipeMoralesCyberTrust/PP-frontend.git'
+                    //def additionalArgs = "--github ${githubRepoUrl}"  
                     snykSecurity(
                         snykInstallation: 'SnykPlugin',
                         snykTokenId: 'snyktoken',
                         severityThreshold: "high",
+                        //codeSeverityThreshold: "high",
                         failOnIssues: false,
                         monitorProjectOnBuild: false, 
-                        additionalArguments: "--container '${name_final_front}'")
+                        additionalArguments: "--code '${name_final_front}'")
                 }
             }
         }
@@ -186,16 +205,17 @@ pipeline {
         stage("Snyk Test Repo2"){
             steps{
                 script{
-                    def githubRepoUrl = 'https://github.com/FelipeMoralesCyberTrust/PP-backend.git'
-                    def additionalArgs = "--github ${githubRepoUrl}"
-                    snykSecurity(
+                    def snykResult = snykSecurity(
                         snykInstallation: 'SnykPlugin',
-                        snykTokenId: 'snyktoken',
-                        severityThreshold: "high",
-                        codeSeverityThreshold: "high",
+                        snykTokenId: "snyktoken",
+                        severity: "--severity-Threshold=critical",
                         failOnIssues: false,
-                        monitorProjectOnBuild: false,
-                        additionalArguments: additionalArgs)
+                        monitorProjectOnBuild: true,
+                        additionalArguments: "--container '${name_final_back}'")
+                    
+                    if (snykResult.contains("critical severity")) {
+                        error('Se encontraron vulnerabilidades críticas. Deteniendo el pipeline.')
+                    }
                 }
             }
         }
