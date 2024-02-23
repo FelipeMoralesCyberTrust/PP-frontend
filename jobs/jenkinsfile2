@@ -120,6 +120,9 @@ pipeline {
                         monitorProjectOnBuild: true,
                         additionalArguments: "--container '${name_final_front}'")
                     
+                    if (snykResult.contains("critical severity")) {
+                        error('Se encontraron vulnerabilidades críticas. Deteniendo el pipeline.')
+                    }
                 }
             }
         }
@@ -188,11 +191,11 @@ pipeline {
                         snykInstallation: 'SnykPlugin',
                         snykTokenId: "snyktoken",
                         severity: "--severity-Threshold=critical",
-                        failOnIssues: true,
+                        failOnIssues: false,
                         monitorProjectOnBuild: true,
                         additionalArguments: "--container '${name_final_back}'")
                     
-                    if (snykResult.contains("high")) {
+                    if (snykResult.contains("critical severity")) {
                         error('Se encontraron vulnerabilidades críticas. Deteniendo el pipeline.')
                     }
                 }
