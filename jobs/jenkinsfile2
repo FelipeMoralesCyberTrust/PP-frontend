@@ -184,13 +184,17 @@ pipeline {
         stage("Snyk Test Repo2"){
             steps{
                 script{
-                    snykSecurity(
+                    def snykResult = snykSecurity(
                         snykInstallation: 'SnykPlugin',
                         snykTokenId: "snyktoken",
                         severity: "--severity-Threshold=critical",
                         failOnIssues: true,
                         monitorProjectOnBuild: true,
                         additionalArguments: "--container '${name_final_back}'")
+                    
+                    if (snykResult.contains("high")) {
+                        error('Se encontraron vulnerabilidades críticas. Deteniendo el pipeline.')
+                    }
                 }
             }
         }
