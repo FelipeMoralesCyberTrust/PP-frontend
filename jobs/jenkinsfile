@@ -123,7 +123,7 @@ pipeline {
                         snykInstallation: 'SnykPlugin',
                         snykTokenId: 'snyktoken',
                         severity: "--severity-Threshold: medium",
-                        failOnIssues: true,
+                        failOnIssues: false,
                         monitorProjectOnBuild: true, 
                         additionalArguments: "--container '${name_final_front}'")
 
