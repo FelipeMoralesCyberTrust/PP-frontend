@@ -123,8 +123,8 @@ pipeline {
                         snykInstallation: 'SnykPlugin',
                         snykTokenId: 'snyktoken',
                         severity: "--severity-Threshold: medium",
-                        failOnIssues: false,
-                        monitorProjectOnBuild: false, 
+                        failOnIssues: true,
+                        monitorProjectOnBuild: true, 
                         additionalArguments: "--code '${name_final_front}'")
 
                     if(snykResult.contains("medium severity")){
