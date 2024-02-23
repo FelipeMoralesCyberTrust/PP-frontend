@@ -111,7 +111,7 @@ pipeline {
                         severityThreshold: "high",
                         codeSeverityThreshold: "high",
                         failOnIssues: false,
-                        //monitorProjectOnBuild: false,
+                        monitorProjectOnBuild: false, 
                         additionalArguments: additionalArgs)
                 }
             }
