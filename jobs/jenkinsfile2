@@ -112,13 +112,10 @@ pipeline {
         stage("Snyk Test Repo1"){
             steps{         
                 script{
-                    //def githubRepoUrl = 'https://github.com/FelipeMoralesCyberTrust/PP-frontend.git'
-                    //def additionalArgs = "--github = ${githubRepoUrl}"
                     snykSecurity(
                         snykInstallation: 'SnykPlugin',
                         snykTokenId: "snyktoken",
                         severity: "--severity-Threshold=critical",
-                        //codeSeverityThreshold: "high",
                         failOnIssues: true,
                         monitorProjectOnBuild: true,
                         additionalArguments: "--container '${name_final_front}'")
@@ -187,15 +184,11 @@ pipeline {
         stage("Snyk Test Repo2"){
             steps{
                 script{
-                    //def githubRepoUrl = 'https://github.com/FelipeMoralesCyberTrust/PP-backend.git'
-                    //def additionalArgs = "--github ${githubRepoUrl}"
                     snykSecurity(
                         snykInstallation: 'SnykPlugin',
                         snykTokenId: "snyktoken",
                         severity: "--severity-Threshold=critical",
-                        //codeSeverityThreshold: "high",
                         failOnIssues: true,
-                        //failOnError: false,
                         monitorProjectOnBuild: true,
                         additionalArguments: "--container '${name_final_back}'")
                 }
