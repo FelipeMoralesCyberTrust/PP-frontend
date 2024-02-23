@@ -119,8 +119,8 @@ pipeline {
         stage("Snyk Test Repo1"){
             steps{
                 script{  
-                    snykSecurity(
-                        def snykResult = snykInstallation: 'SnykPlugin',
+                    def snykResult = snykSecurity(
+                        snykInstallation: 'SnykPlugin',
                         snykTokenId: 'snyktoken',
                         severity: "--severity-Threshold: medium",
                         failOnIssues: false,
