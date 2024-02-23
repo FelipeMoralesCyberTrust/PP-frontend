@@ -123,8 +123,8 @@ pipeline {
                         snykInstallation: 'SnykPlugin',                             //Especifica la instalación de Snyk llamada 'SnykPlugin'. Plugin instalado en jenkins.
                         snykTokenId: "snyktoken",                                   //Indica la identificación de la credencial de token de Snyk que se utilizará para la autenticación. Deberia usarse el API key de la cuenta de snyk
                         severity: "--severity-Threshold=critical",                  //Establece un umbral de severidad, en este caso, se configura para considerar solo vulnerabilidades críticas.
-                        failOnIssues: true,                                         //Hace que el pipeline falle si se encuentran problemas de seguridad durante el escaneo.
-                        monitorProjectOnBuild: true,                                //
+                        failOnIssues: false,                                         //Hace que el pipeline falle si se encuentran problemas de seguridad durante el escaneo.
+                        monitorProjectOnBuild: true,                                //Habilita el monitoreo del proyecto en Snyk durante la construcción.
                         additionalArguments: "--container '${name_final_front}'")   //
                     
                     if (snykResult.contains("critical severity")) {
