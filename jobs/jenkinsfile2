@@ -5,14 +5,12 @@ pipeline {
         string(name: 'name_container', defaultValue: 'felipemoralescybertrust', description: 'nombre del docker')
         string(name: 'name_imagen_front', defaultValue: 'practicafrontct', description: 'nombre de la imagen del front')
         string(name: 'tag_imagen', defaultValue: 'latest', description: 'etiqueta de la imagen')
-        //string(name: 'puerto_imagen', defaultValue: '81', description: 'puerto a publicar')
         string(name: 'name_imagen_back', defaultValue: 'practicabackct',description: 'nombre de la imagen del back')
     }
 
     environment {
         name_final_front = "${name_container}/${name_imagen_front}:${tag_imagen}"
         name_final_back = "${name_container}/${name_imagen_back}:${tag_imagen}"
-        //workspace = "/var/lib/jenkins/workspace/pipelineProyecto"
     }
     stages {
         stage("Eliminar todos los contenedores"){

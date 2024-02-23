@@ -101,18 +101,19 @@ pipeline {
         }
         
         stage("Snyk Test Repo1"){
-            steps{
-                script{    
-                    //def githubRepoUrl = 'https://github.com/FelipeMoralesCyberTrust/PP-frontend.git'
-                    //def additionalArgs = "--github ${githubRepoUrl}"  
-                    snykSecurity(
+            steps{         
+                script{
+                    def snykResult= snykSecurity(
                         snykInstallation: 'SnykPlugin',
-                        snykTokenId: 'snyktoken',
-                        severityThreshold: "high",
-                        //codeSeverityThreshold: "high",
-                        failOnIssues: false,
-                        monitorProjectOnBuild: false, 
-                        additionalArguments: "--code '${name_final_front}'")
+                        snykTokenId: "snyktoken",
+                        severity: "--severity-Threshold=critical",
+                        failOnIssues: true,
+                        monitorProjectOnBuild: true,
+                        additionalArguments: "--container '${name_final_front}'")
+                    
+                    if (snykResult.contains("critical severity")) {
+                        error('Se encontraron vulnerabilidades críticas. Deteniendo el pipeline.')
+                    }
                 }
             }
         }
@@ -189,16 +190,17 @@ pipeline {
         stage("Snyk Test Repo2"){
             steps{
                 script{
-                    def githubRepoUrl = 'https://github.com/FelipeMoralesCyberTrust/PP-backend.git'
-                    def additionalArgs = "--github ${githubRepoUrl}"
-                    snykSecurity(
+                    def snykResult = snykSecurity(
                         snykInstallation: 'SnykPlugin',
-                        snykTokenId: 'snyktoken',
-                        severityThreshold: "high",
-                        codeSeverityThreshold: "high",
+                        snykTokenId: "snyktoken",
+                        severity: "--severity-Threshold=critical",
                         failOnIssues: false,
-                        monitorProjectOnBuild: false,
-                        additionalArguments: additionalArgs)
+                        monitorProjectOnBuild: true,
+                        additionalArguments: "--container '${name_final_back}'")
+                    
+                    if (snykResult.contains("critical severity")) {
+                        error('Se encontraron vulnerabilidades críticas. Deteniendo el pipeline.')
+                    }
                 }
             }
         }
