@@ -117,11 +117,11 @@ pipeline {
                     snykSecurity(
                         snykInstallation: 'SnykPlugin',
                         snykTokenId: "snyktoken",
-                        severityThreshold: "high",
+                        severityThreshold: "critical",
                         codeSeverityThreshold: "high",
                         failOnIssues: false,
                         failOnError: false,
-                        monitorProjectOnBuild: false,
+                        monitorProjectOnBuild: true,
                         additionalArguments: "--github 'https://github.com/FelipeMoralesCyberTrust/PP-frontend.git'")
                     
                 }
@@ -193,11 +193,11 @@ pipeline {
                     snykSecurity(
                         snykInstallation: 'SnykPlugin',
                         snykTokenId: "snyktoken",
-                        severityThreshold: "high",
+                        severityThreshold: "critical",
                         codeSeverityThreshold: "high",
                         failOnIssues: false,
                         failOnError: false,
-                        monitorProjectOnBuild: false,
+                        monitorProjectOnBuild: true,
                         additionalArguments: "--github 'https://github.com/FelipeMoralesCyberTrust/PP-backend.git'")
                 }
             }
