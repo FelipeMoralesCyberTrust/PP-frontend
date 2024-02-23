@@ -67,8 +67,8 @@ pipeline {
                     def scannerHome = tool 'sonar-scanner';                                                         //Se establece la ubicación del SonarQube Scanner en la variable scannerHome utilizando la herramienta registrada en Jenkins con el nombre 'sonar-scanner'.
                     withSonarQubeEnv('SonarCloud') {                                                                //Se utiliza el plugin withSonarQubeEnv para configurar el entorno de SonarQube llamado 'SonarCloud'.
                         withCredentials([string(credentialsId: 'SonarToJenkins', variable: 'SonarToJenkins')]) {    //Se utiliza el plugin withCredentials para proporcionar las credenciales necesarias para autenticarse con SonarQube.
-                            sh "${scannerHome}/bin/sonar-scanner \                                                  
-                            -Dsonar.organization=felipemoralescybertrust \                                          
+                            sh "${scannerHome}/bin/sonar-scanner \
+                            -Dsonar.organization=felipemoralescybertrust \
                             -Dsonar.projectKey=FelipeMoralesCyberTrust_PP-frontend \
                             -Dsonar.sources=. \
                             -Dsonar.host.url=https://sonarcloud.io \
