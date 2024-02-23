@@ -120,7 +120,7 @@ pipeline {
                         severityThreshold: "high",
                         codeSeverityThreshold: "high",
                         failOnIssues: false,
-                        monitorProjectOnBuild: true,
+                        //monitorProjectOnBuild: false,
                         additionalArguments: additionalArgs)
                     
                 }
