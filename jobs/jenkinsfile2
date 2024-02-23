@@ -118,11 +118,10 @@ pipeline {
                         snykInstallation: 'SnykPlugin',
                         snykTokenId: "snyktoken",
                         severityThreshold: "critical",
-                        codeSeverityThreshold: "high",
+                        //codeSeverityThreshold: "high",
                         failOnIssues: true,
-                        //failOnError: true,
-                        monitorProjectOnBuild: true,
-                        additionalArguments: '--code ${name_final_front}')
+                        monitorProjectOnBuild: false,
+                        additionalArguments: '--docker ${name_final_front}')
                     
                 }
             }
