@@ -118,17 +118,6 @@ pipeline {
                         monitorProjectOnBuild: true,
                         additionalArguments: "--container '${name_final_front}'")
                     
-                    /*
-                    if (snykResult.contains("critical severity")) {
-                        error('Se encontraron vulnerabilidades críticas. Deteniendo el pipeline.')
-                    }
-                    */
-                }
-            }
-        }
-        stage("Validando Snyk Test"){
-            steps{
-                script{
                     if (snykResult==null){
                         echo "continuar con jenkins"
                     }
@@ -212,17 +201,6 @@ pipeline {
                         monitorProjectOnBuild: true,
                         additionalArguments: "--container '${name_final_back}'")
                     
-                    /*
-                    if (snykResult2.contains("critical severity")) {
-                        error('Se encontraron vulnerabilidades críticas. Deteniendo el pipeline.')
-                    }
-                    */
-                }
-            }
-        }
-        stage("Validando Snyk Test2"){
-            steps{
-                script{
                     if (snykResult2==null){
                         echo "continuar con jenkins"
                     }
@@ -237,7 +215,7 @@ pipeline {
                 }
             }
         }
-
+        
         stage('Deploy') {
             steps {
                 script {
