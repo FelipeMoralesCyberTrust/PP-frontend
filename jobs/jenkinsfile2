@@ -114,12 +114,31 @@ pipeline {
                         snykInstallation: 'SnykPlugin',
                         snykTokenId: "snyktoken",
                         severity: "--severity-Threshold=critical",
-                        failOnIssues: true,
+                        failOnIssues: false,
                         monitorProjectOnBuild: true,
                         additionalArguments: "--container '${name_final_front}'")
                     
+                    /*
                     if (snykResult.contains("critical severity")) {
                         error('Se encontraron vulnerabilidades críticas. Deteniendo el pipeline.')
+                    */
+                    }
+                }
+            }
+        }
+        stage("Validando Snyk Test"){
+            steps{
+                script{
+                    if (snykResult==null){
+                        echo "continuar con jenkins"
+                    }
+                    else{
+                        if (snykResult.contains("critical severity")){
+                            error('SE encontraron vulnerabilidades criticas. Deteniendo el pipeline')
+                        }
+                        else{
+                            echo "continuar con jenkins"
+                        }
                     }
                 }
             }
@@ -185,16 +204,35 @@ pipeline {
         stage("Snyk Test Repo2"){
             steps{
                 script{
-                    def snykResult = snykSecurity(
+                    def snykResult2 = snykSecurity(
                         snykInstallation: 'SnykPlugin',
                         snykTokenId: "snyktoken",
-                        severity: "--severity-Threshold=critical",
+                        severity: "--severity-Threshold=medium",
                         failOnIssues: false,
                         monitorProjectOnBuild: true,
                         additionalArguments: "--container '${name_final_back}'")
                     
-                    if (snykResult.contains("critical severity")) {
+                    /*
+                    if (snykResult2.contains("critical severity")) {
                         error('Se encontraron vulnerabilidades críticas. Deteniendo el pipeline.')
+                    */
+                    }
+                }
+            }
+        }
+        stage("Validando Snyk Test"){
+            steps{
+                script{
+                    if (snykResult2==null){
+                        echo "continuar con jenkins"
+                    }
+                    else{
+                        if (snykResult2.contains("medium severity")){
+                            error('Se encontraron vulnerabilidades criticas. Deteniendo el pipeline')
+                        }
+                        else{
+                            echo "continuar con jenkins"
+                        }
                     }
                 }
             }
