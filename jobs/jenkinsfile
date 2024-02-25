@@ -41,7 +41,7 @@ pipeline {
                 }
 
             }
-        }
+        }/*
         stage ("Pull HawkScan Image") {
             steps {
                 script{ //pull de la imagen docker stackhawk/hawkscan que es basicamente el scanner de stackhak
@@ -49,7 +49,7 @@ pipeline {
                 }
 
             }
-        }
+        }*/
         // Etapa para verificar que el repositorio existe y hay acceso por parte de jenkins a éste.
         stage('Verificar Repo 1') {
             steps {
@@ -67,8 +67,8 @@ pipeline {
                     def scannerHome = tool 'sonar-scanner';                                                         //Se establece la ubicación del SonarQube Scanner en la variable scannerHome utilizando la herramienta registrada en Jenkins con el nombre 'sonar-scanner'.
                     withSonarQubeEnv('SonarCloud') {                                                                //Se utiliza el plugin withSonarQubeEnv para configurar el entorno de SonarQube llamado 'SonarCloud'.
                         withCredentials([string(credentialsId: 'SonarToJenkins', variable: 'SonarToJenkins')]) {    //Se utiliza el plugin withCredentials para proporcionar las credenciales necesarias para autenticarse con SonarQube.
-                            sh "${scannerHome}/bin/sonar-scanner \                                                  
-                            -Dsonar.organization=felipemoralescybertrust \                                          
+                            sh "${scannerHome}/bin/sonar-scanner \
+                            -Dsonar.organization=felipemoralescybertrust \
                             -Dsonar.projectKey=FelipeMoralesCyberTrust_PP-frontend \
                             -Dsonar.sources=. \
                             -Dsonar.host.url=https://sonarcloud.io \
@@ -123,8 +123,8 @@ pipeline {
                         snykInstallation: 'SnykPlugin',                             //Especifica la instalación de Snyk llamada 'SnykPlugin'. Plugin instalado en jenkins.
                         snykTokenId: "snyktoken",                                   //Indica la identificación de la credencial de token de Snyk que se utilizará para la autenticación. Deberia usarse el API key de la cuenta de snyk
                         severity: "--severity-Threshold=critical",                  //Establece un umbral de severidad, en este caso, se configura para considerar solo vulnerabilidades críticas.
-                        failOnIssues: false,                                         //Hace que el pipeline falle si se encuentran problemas de seguridad durante el escaneo.
-                        monitorProjectOnBuild: true,                                //Habilita el monitoreo del proyecto en Snyk durante la construcción.
+                        failOnIssues: true,                                         //Hace que el pipeline falle si se encuentran problemas de seguridad durante el escaneo.
+                        monitorProjectOnBuild: true,                                //
                         additionalArguments: "--container '${name_final_front}'")   //
                     
                     if (snykResult.contains("critical severity")) {
@@ -209,12 +209,12 @@ pipeline {
                     def snykResult = snykSecurity(
                         snykInstallation: 'SnykPlugin',
                         snykTokenId: "snyktoken",
-                        severity: "--severity-Threshold=critical",
+                        severity: "--severity-Threshold=medium",
                         failOnIssues: false,
-                        monitorProjectOnBuild: true,
+                        monitorProjectOnBuild: false,
                         additionalArguments: "--container '${name_final_back}'")
                     
-                    if (snykResult.contains("critical severity")) {
+                    if (snykResult.contains("medium severity")) {
                         error('Se encontraron vulnerabilidades críticas. Deteniendo el pipeline.')
                     }
                 }
