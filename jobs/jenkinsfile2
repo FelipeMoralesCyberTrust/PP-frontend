@@ -121,8 +121,8 @@ pipeline {
                     /*
                     if (snykResult.contains("critical severity")) {
                         error('Se encontraron vulnerabilidades críticas. Deteniendo el pipeline.')
-                    */
                     }
+                    */
                 }
             }
         }
@@ -215,8 +215,8 @@ pipeline {
                     /*
                     if (snykResult2.contains("critical severity")) {
                         error('Se encontraron vulnerabilidades críticas. Deteniendo el pipeline.')
-                    */
                     }
+                    */
                 }
             }
         }
