@@ -220,7 +220,7 @@ pipeline {
                 }
             }
         }
-        stage("Validando Snyk Test"){
+        stage("Validando Snyk Test2"){
             steps{
                 script{
                     if (snykResult2==null){
