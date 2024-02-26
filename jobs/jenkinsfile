@@ -114,8 +114,26 @@ pipeline {
             }       //Pasa la variable de entorno 'API_KEY' al contenedor con el valor de la clave API proporcionada por las credenciales.
                     //Configura HawkScan para no usar colores en la salida, lo cual es útil para entornos de Jenkins.
                     //Asigna un nombre al contenedor como 'hawktest1'.
-        }           
-        
+        }
+        stage("Snyk Test Repo1"){
+            steps{
+                script{
+                    sh 'snyk auth "f3995448-4066-4d0e-8dc5-e20a69396bf6"'
+                    sh '''
+                        snyk test ^
+                        --github "https://github.com/FelipeMoralesCyberTrust/PP-frontend.git" ^
+                        --json --debug > "snyk-results.json"
+                        '''
+                    if (sh(script: 'findstr /C:"severity":"high" snyk-results.json', returnStatus: true) == 0) {
+                        echo "Se encontraron vulnerabilidades altas. Deteniendo la ejecución."
+                        error("Deteniendo la ejecución debido a vulnerabilidades altas.")
+                    } else {
+                        echo "No se encontraron vulnerabilidades altas."
+                    }
+                }
+            }
+        }
+        /*
         stage("Snyk Test Repo1"){
             steps{         
                 script{
@@ -133,6 +151,7 @@ pipeline {
                 }
             }
         }
+        */
         /*
         stage("snyk test image"){
             steps{
