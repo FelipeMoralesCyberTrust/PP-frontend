@@ -110,7 +110,7 @@ pipeline {
         stage("Snyk Test Repo1"){
             steps{         
                 script{
-                    def snykResult= snykSecurity(
+                    snykSecurity(
                         snykInstallation: 'SnykPlugin',
                         snykTokenId: "snyktoken",
                         severity: "--severity-Threshold=critical",
@@ -118,6 +118,7 @@ pipeline {
                         monitorProjectOnBuild: true,
                         additionalArguments: "--docker '${name_final_front}'")
                     
+                    /*
                     if (snykResult==null){
                         echo "continuar con jenkins"
                     }
@@ -129,6 +130,7 @@ pipeline {
                             echo "continuar con jenkins"
                         }
                     }
+                    */
                 }
             }
         }
@@ -193,13 +195,13 @@ pipeline {
         stage("Snyk Test Repo2"){
             steps{
                 script{
-                    def snykResult2 = snykSecurity(
+                    def snykSecurity(
                         snykInstallation: 'SnykPlugin',
                         snykTokenId: "snyktoken",
                         severity: "--severity-Threshold=high",
                         failOnIssues: false,
                         monitorProjectOnBuild: true,
-                        additionalArguments: "--docker '${name_final_back}'")
+                        additionalArguments: "--github https://github.com/FelipeMoralesCyberTrust/PP-frontend.git")
                     
                     /*
                     if (snykResult2==null){
@@ -213,7 +215,7 @@ pipeline {
                             echo "continuar con jenkins"
                         }
                     }
-                    */
+                    
                     echo "snykResult2: ${snykResult2.getClass()}"
                     if (snykResult2 != null) {
                         if (snykResult2.contains("high severity")) {
@@ -224,6 +226,7 @@ pipeline {
                     } else {
                         echo "Continuar con Jenkins."
                     }
+                    */
                 }
             }
         }
