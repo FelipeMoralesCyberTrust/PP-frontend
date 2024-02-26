@@ -110,7 +110,7 @@ pipeline {
             steps{
                 script{
                     bat 'snyk auth "f3995448-4066-4d0e-8dc5-e20a69396bf6"'
-                    bat '"C:/Users/tiray/AppData/Roaming/npm/snyk" test --github "https://github.com/FelipeMoralesCyberTrust/PP-frontend.git" --org="FelipeMoralesCyberTrust" --json --debug > "snyk-results.json"'
+                    bat '"C:/Users/tiray/AppData/Roaming/npm/snyk" test --github "https://github.com/FelipeMoralesCyberTrust/PP-frontend.git" --org=FelipeMoralesCyberTrust --json --debug > "snyk-results.json"'
                     if (bat(script: 'findstr /C:"High Severity" snyk-results.json', returnStatus: true) == 0) {
                         echo "Se encontraron vulnerabilidades altas. Deteniendo la ejecución."
                         error("Deteniendo la ejecución debido a vulnerabilidades altas.")
