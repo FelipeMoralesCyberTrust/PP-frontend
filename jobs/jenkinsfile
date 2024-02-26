@@ -121,7 +121,7 @@ pipeline {
                     dir('/var/lib/jenkins/jobs/pipelineProyecto') {
                         sh 'snyk auth "f3995448-4066-4d0e-8dc5-e20a69396bf6"'
                         sh '''
-                            snyk test --github "https://github.com/FelipeMoralesCyberTrust/PP-frontend.git" --json --debug > "snyk-results.json"
+                            snyk test --github "https://github.com/FelipeMoralesCyberTrust/PP-frontend.git" --json --debug --fail-on-issues=false > "snyk-results.json"
                         '''
                         if (sh(script: 'findstr /C:"severity":"medium" snyk-results.json', returnStatus: true) == 0) {
                             echo "Se encontraron vulnerabilidades altas. Deteniendo la ejecución."
