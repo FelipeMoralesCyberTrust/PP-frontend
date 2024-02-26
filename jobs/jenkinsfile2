@@ -121,7 +121,7 @@ pipeline {
                             } else {
                                 echo "No se encontraron vulnerabilidades medias."
                             }
-                        }catch{
+                        } catch{
                             echo "Un error esperado a ocurrido, seguir con jenkins."
                             if (bat(script: 'findstr /C:"severity":"medium" C:/ProgramData/Jenkins/.jenkins/workspace/pipelineproyecto/snyk-results.json', returnStatus: true) == 0) {
                                 echo "Se encontraron vulnerabilidades medias. Deteniendo la ejecución."
