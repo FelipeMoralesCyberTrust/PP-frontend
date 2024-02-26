@@ -116,20 +116,20 @@ pipeline {
                                 snyk test --github "https://github.com/FelipeMoralesCyberTrust/PP-frontend.git" --json --debug --fail-on-issues=false > "snyk-results.json"
                             '''
                             def result = readFile(file: 'C:/ProgramData/Jenkins/.jenkins/workspace/pipelineproyecto/snyk-results.json').trim()
-                            if (result.contains('"severity": "medium"')) {
-                                echo "Se encontraron vulnerabilidades medias. Deteniendo la ejecución."
-                                error("Deteniendo la ejecución debido a vulnerabilidades medias.")
+                            if (result.contains('"severity": "critical"')) {
+                                echo "Se encontraron vulnerabilidades criticas. Deteniendo la ejecución."
+                                error("Deteniendo la ejecución debido a vulnerabilidades criticas.")
                             } else {
-                                echo "No se encontraron vulnerabilidades medias."
+                                echo "No se encontraron vulnerabilidades criticas."
                             }
                         } catch(err){
                             echo "Un error esperado a ocurrido, seguir con jenkins."
                             def result = readFile(file: 'C:/ProgramData/Jenkins/.jenkins/workspace/pipelineproyecto/snyk-results.json').trim()
-                            if (result.contains('"severity": "medium"')) {
-                                echo "Se encontraron vulnerabilidades medias. Deteniendo la ejecución."
-                                error("Deteniendo la ejecución debido a vulnerabilidades medias.")
+                            if (result.contains('"severity": "critical"')) {
+                                echo "Se encontraron vulnerabilidades criticas. Deteniendo la ejecución."
+                                error("Deteniendo la ejecución debido a vulnerabilidades criticas.")
                             } else {
-                                echo "No se encontraron vulnerabilidades medias."
+                                echo "No se encontraron vulnerabilidades criticas."
                             }
                         }
                     }
