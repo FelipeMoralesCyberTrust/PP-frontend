@@ -109,15 +109,13 @@ pipeline {
         stage("Snyk Test Repo1"){
             steps{
                 script{
-                    withCredentials([string(credentialsId:'snyktoken', variable: 'snyktoken')]){
-                        bat "snyk auth ${snyktoken}"
-                        bat "snyk test --github https://github.com/FelipeMoralesCyberTrust/PP-frontend.git --json > snyk-results.json --org=FelipeMoralesCyberTrust"
-                        if (bat(script: 'findstr /C:"High Severity" snyk-results.json', returnStatus: true) == 0) {
-                            echo "Se encontraron vulnerabilidades altas. Deteniendo la ejecución."
-                            error("Deteniendo la ejecución debido a vulnerabilidades altas.")
-                        } else {
-                            echo "No se encontraron vulnerabilidades altas."
-                        }
+                    bat "snyk auth 'snyktoken'"
+                    bat "snyk test --github https://github.com/FelipeMoralesCyberTrust/PP-frontend.git --json > snyk-results.json --org=FelipeMoralesCyberTrust"
+                    if (bat(script: 'findstr /C:"High Severity" snyk-results.json', returnStatus: true) == 0) {
+                        echo "Se encontraron vulnerabilidades altas. Deteniendo la ejecución."
+                        error("Deteniendo la ejecución debido a vulnerabilidades altas.")
+                    } else {
+                        echo "No se encontraron vulnerabilidades altas."
                     }
                 }
             }
