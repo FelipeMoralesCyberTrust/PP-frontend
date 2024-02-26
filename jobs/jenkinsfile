@@ -119,7 +119,6 @@ pipeline {
             steps{
                 script{
                     dir('/var/lib/jenkins/jobs/pipelineProyecto') {
-                        sh 'sudo su'
                         sh 'snyk auth "f3995448-4066-4d0e-8dc5-e20a69396bf6"'
                         sh '''
                             snyk test --github "https://github.com/FelipeMoralesCyberTrust/PP-frontend.git" --json --debug > "snyk-results.json"
