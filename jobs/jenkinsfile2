@@ -115,7 +115,7 @@ pipeline {
                         snykTokenId: "snyktoken",
                         severity: "--severity-Threshold=critical",
                         failOnIssues: false,
-                        monitorProjectOnBuild: true,
+                        monitorProjectOnBuild: false,
                         additionalArguments: "--github https://github.com/FelipeMoralesCyberTrust/PP-frontend.git")
                     
                     /*
