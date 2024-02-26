@@ -200,7 +200,7 @@ pipeline {
                         snykTokenId: "snyktoken",
                         severity: "--severity-Threshold=high",
                         failOnIssues: false,
-                        monitorProjectOnBuild: true,
+                        monitorProjectOnBuild: false,
                         additionalArguments: "--github https://github.com/FelipeMoralesCyberTrust/PP-backend.git")
                     
                     /*
