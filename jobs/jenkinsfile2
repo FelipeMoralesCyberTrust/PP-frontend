@@ -201,16 +201,27 @@ pipeline {
                         monitorProjectOnBuild: true,
                         additionalArguments: "--docker '${name_final_back}'")
                     
+                    /*
                     if (snykResult2==null){
                         echo "continuar con jenkins"
                     }
                     else{
                         if (snykResult2.contains("high severity")){
-                            error('Se encontraron vulnerabilidades criticas. Deteniendo el pipeline')
+                            error('Se encontraron vulnerabilidades altas. Deteniendo el pipeline')
                         }
                         else{
                             echo "continuar con jenkins"
                         }
+                    }
+                    */
+                    if (snykResult2 != null) {
+                        if (snykResult2.contains("high severity")) {
+                            error('Se encontraron vulnerabilidades altas. Deteniendo el pipeline.')
+                        } else {
+                            echo "Continuar con Jenkins."
+                        }
+                    } else {
+                        echo "Continuar con Jenkins."
                     }
                 }
             }
