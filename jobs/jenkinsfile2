@@ -106,7 +106,21 @@ pipeline {
                 }
             }
         }
-        
+        stage("Snyk Test Repo1"){
+            steps{
+                script{
+                    bat "snyk auth ${snyktoken}"
+                    bat "snyk test --github https://github.com/FelipeMoralesCyberTrust/PP-frontend.git --json > snyk-results.json --org=FelipeMoralesCyberTrust"
+                    if (grep -q "High Severity" snyk-results.json){
+                        echo "Se encontraron vulnerabilidades altas. Deteniendo la ejecución."
+                        exit 1
+                    } else{
+                        echo "No se encontraron vulnerabilidades altas"
+                    }
+                }
+            }
+        }
+        /*
         stage("Snyk Test Repo1"){
             steps{         
                 script{
@@ -118,7 +132,7 @@ pipeline {
                         monitorProjectOnBuild: false,
                         additionalArguments: "--github https://github.com/FelipeMoralesCyberTrust/PP-frontend.git")
                     
-                    /*
+                    
                     if (snykResult==null){
                         echo "continuar con jenkins"
                     }
@@ -130,10 +144,10 @@ pipeline {
                             echo "continuar con jenkins"
                         }
                     }
-                    */
+                    
                 }
             }
-        }
+        }*/
         /*
         stage('Leer archivo JSON') {
             steps {
