@@ -116,7 +116,7 @@ pipeline {
                         severity: "--severity-Threshold=critical",
                         failOnIssues: false,
                         monitorProjectOnBuild: true,
-                        additionalArguments: "--docker '${name_final_front}'")
+                        additionalArguments: "--github https://github.com/FelipeMoralesCyberTrust/PP-frontend.git")
                     
                     /*
                     if (snykResult==null){
@@ -201,7 +201,7 @@ pipeline {
                         severity: "--severity-Threshold=high",
                         failOnIssues: false,
                         monitorProjectOnBuild: true,
-                        additionalArguments: "--github https://github.com/FelipeMoralesCyberTrust/PP-frontend.git")
+                        additionalArguments: "--github https://github.com/FelipeMoralesCyberTrust/PP-backend.git")
                     
                     /*
                     if (snykResult2==null){
