@@ -118,8 +118,8 @@ pipeline {
         stage("Snyk Test Repo1"){
             steps{
                 script{
-                    try{
-                        dir('/var/lib/jenkins/jobs/pipelineProyecto') {
+                    dir('/var/lib/jenkins/jobs/pipelineProyecto'){
+                        try{
                             sh 'snyk auth "f3995448-4066-4d0e-8dc5-e20a69396bf6"'
                             sh '''
                                 snyk test --github "https://github.com/FelipeMoralesCyberTrust/PP-frontend.git" --json --debug --fail-on-issues=false > "snyk-results.json"
@@ -130,14 +130,14 @@ pipeline {
                             } else {
                                 echo "No se encontraron vulnerabilidades altas."
                             }
-                        }
-                    }catch(err){
-                        echo "Un error esperado a ocurrido, seguir con jenkins."
-                        if (sh(script: 'grep \'"severity": "medium"\' snyk-results.json', returnStatus: true) == 0) {
-                            echo "Se encontraron vulnerabilidades medias. Deteniendo la ejecución."
-                            error("Deteniendo la ejecución debido a vulnerabilidades medias.")
-                        } else {
-                                echo "No se encontraron vulnerabilidades altas."
+                        }catch(err){
+                            echo "Un error esperado a ocurrido, seguir con jenkins."
+                            if (sh(script: 'grep \'"severity": "medium"\' snyk-results.json', returnStatus: true) == 0) {
+                                echo "Se encontraron vulnerabilidades medias. Deteniendo la ejecución."
+                                error("Deteniendo la ejecución debido a vulnerabilidades medias.")
+                            } else {
+                                    echo "No se encontraron vulnerabilidades altas."
+                            }
                         }
                     }
                 }
