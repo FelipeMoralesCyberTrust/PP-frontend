@@ -134,6 +134,28 @@ pipeline {
                 }
             }
         }
+        stage('Leer archivo JSON') {
+            steps {
+                script {
+                    def filePath = 'C:\\ProgramData\\Jenkins\\.jenkins\\workspace\\pipelineproyecto\\2024-02-26T03-46-17-261867Z_snyk_report.json'
+
+                    try {
+                        def fileContent = readFile file: filePath, encoding: 'UTF-8'
+                        def json = readJSON text: fileContent
+
+                        if (json.summary.contains('medium severity')) {
+                            echo 'Se encontró la frase "medium severity" en el archivo JSON.'
+                            error('Se encontraron vulnerabilidades medias')
+                        } else {
+                            error 'No se encontró la frase "medium severity" en el archivo JSON.'
+                            echo 'Seguir con jenkins'
+                        }
+                    } catch (Exception e) {
+                        error "Error al leer o procesar el archivo JSON: ${e.message}"
+                    }
+                }
+            }
+        }
 
         stage('Verificar Repo 2') {
             steps {
