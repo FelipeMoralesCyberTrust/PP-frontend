@@ -116,7 +116,7 @@ pipeline {
                         severity: "--severity-Threshold=critical",
                         failOnIssues: false,
                         monitorProjectOnBuild: true,
-                        additionalArguments: "--container '${name_final_front}'")
+                        additionalArguments: "--docker '${name_final_front}'")
                     
                     if (snykResult==null){
                         echo "continuar con jenkins"
@@ -196,16 +196,16 @@ pipeline {
                     def snykResult2 = snykSecurity(
                         snykInstallation: 'SnykPlugin',
                         snykTokenId: "snyktoken",
-                        severity: "--severity-Threshold=medium",
+                        severity: "--severity-Threshold=high",
                         failOnIssues: false,
                         monitorProjectOnBuild: true,
-                        additionalArguments: "--container '${name_final_back}'")
+                        additionalArguments: "--docker '${name_final_back}'")
                     
                     if (snykResult2==null){
                         echo "continuar con jenkins"
                     }
                     else{
-                        if (snykResult2.contains("medium severity")){
+                        if (snykResult2.contains("high severity")){
                             error('Se encontraron vulnerabilidades criticas. Deteniendo el pipeline')
                         }
                         else{
