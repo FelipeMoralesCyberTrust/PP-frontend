@@ -134,6 +134,7 @@ pipeline {
                 }
             }
         }
+        /*
         stage('Leer archivo JSON') {
             steps {
                 script {
@@ -155,7 +156,7 @@ pipeline {
                     }
                 }
             }
-        }
+        }*/
 
         stage('Verificar Repo 2') {
             steps {
