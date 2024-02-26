@@ -214,7 +214,7 @@ pipeline {
                         }
                     }
                     */
-                    snykResult2: ${snykResult2.getClass()}
+                    echo "snykResult2: ${snykResult2.getClass()}"
                     if (snykResult2 != null) {
                         if (snykResult2.contains("high severity")) {
                             error('Se encontraron vulnerabilidades altas. Deteniendo el pipeline.')
