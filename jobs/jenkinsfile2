@@ -111,7 +111,7 @@ pipeline {
                 script{
                     bat "snyk auth ${snyktoken}"
                     bat "snyk test --github https://github.com/FelipeMoralesCyberTrust/PP-frontend.git --json > snyk-results.json --org=FelipeMoralesCyberTrust"
-                    if (grep -q "High Severity" snyk-results.json){
+                    if (grep -q '"High Severity"' snyk-results.json){
                         echo "Se encontraron vulnerabilidades altas. Deteniendo la ejecución."
                         exit 1
                     } else{
