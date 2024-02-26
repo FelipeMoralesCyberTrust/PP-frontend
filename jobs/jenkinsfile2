@@ -115,7 +115,7 @@ pipeline {
                             bat '''
                                 snyk test --github "https://github.com/FelipeMoralesCyberTrust/PP-frontend.git" --json --debug --fail-on-issues=false > "snyk-results.json"
                             '''
-                            if (bat(script: 'findstr /C:\'"severity": "medium"\' C:/ProgramData/Jenkins/.jenkins/workspace/pipelineproyecto/snyk-results.json', returnStatus: true) == 0) {
+                            if (bat(script: 'findstr /c:\'"severity": "medium"\' C:/ProgramData/Jenkins/.jenkins/workspace/pipelineproyecto/snyk-results.json', returnStatus: true) == 0) {
                                 echo "Se encontraron vulnerabilidades medias. Deteniendo la ejecución."
                                 error("Deteniendo la ejecución debido a vulnerabilidades medias.")
                             } else {
@@ -123,7 +123,7 @@ pipeline {
                             }
                         } catch(err){
                             echo "Un error esperado a ocurrido, seguir con jenkins."
-                            if (bat(script: 'findstr /C:\'"severity": "medium"\' C:/ProgramData/Jenkins/.jenkins/workspace/pipelineproyecto/snyk-results.json', returnStatus: true) == 0) {
+                            if (bat(script: 'findstr /c:\'"severity": "medium"\' C:/ProgramData/Jenkins/.jenkins/workspace/pipelineproyecto/snyk-results.json', returnStatus: true) == 0) {
                                 echo "Se encontraron vulnerabilidades medias. Deteniendo la ejecución."
                                 error("Deteniendo la ejecución debido a vulnerabilidades medias.")
                             } else {
