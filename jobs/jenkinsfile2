@@ -124,7 +124,7 @@ pipeline {
                             }
                         } catch(err){
                             echo "Un error esperado a ocurrido, seguir con jenkins."
-                            def result = readFile(file: 'C:/ProgramData/Jenkins/.jenkins/workspace/pipelineproyecto/snyk-results.json').trim()
+                            def result = readFile(file: 'snyk-results.json').trim()
                             if (result.contains('"severity": "critical"')) {
                                 echo "Se encontraron vulnerabilidades criticas. Deteniendo la ejecución."
                                 error("Deteniendo la ejecución debido a vulnerabilidades criticas.")
@@ -136,58 +136,7 @@ pipeline {
                 }
             }
         }
-        /*
-        stage("Snyk Test Repo1"){
-            steps{         
-                script{
-                    snykSecurity(
-                        snykInstallation: 'SnykPlugin',
-                        snykTokenId: "snyktoken",
-                        severity: "--severity-Threshold=critical",
-                        failOnIssues: false,
-                        monitorProjectOnBuild: false,
-                        additionalArguments: "--github https://github.com/FelipeMoralesCyberTrust/PP-frontend.git")
-                    
-                    
-                    if (snykResult==null){
-                        echo "continuar con jenkins"
-                    }
-                    else{
-                        if (snykResult.contains("critical severity")){
-                            error('SE encontraron vulnerabilidades criticas. Deteniendo el pipeline')
-                        }
-                        else{
-                            echo "continuar con jenkins"
-                        }
-                    }
-                    
-                }
-            }
-        }*/
-        /*
-        stage('Leer archivo JSON') {
-            steps {
-                script {
-                    def filePath = 'C:/ProgramData/Jenkins/.jenkins/workspace/pipelineproyecto/2024-02-26T03-46-17-261867Z_snyk_report.json'
-
-                    try {
-                        def fileContent = readFile file: filePath, encoding: 'UTF-8'
-                        def json = readJSON text: fileContent
-
-                        if (json.summary.contains('medium severity')) {
-                            echo 'Se encontró la frase "medium severity" en el archivo JSON.'
-                            error('Se encontraron vulnerabilidades medias')
-                        } else {
-                            error 'No se encontró la frase "medium severity" en el archivo JSON.'
-                            echo 'Seguir con jenkins'
-                        }
-                    } catch (Exception e) {
-                        error "Error al leer o procesar el archivo JSON: ${e.message}"
-                    }
-                }
-            }
-        }*/
-
+        
         stage('Verificar Repo 2') {
             steps {
                 checkout([$class: 'GitSCM', branches: [[name: '*/main']], 
@@ -248,38 +197,30 @@ pipeline {
         stage("Snyk Test Repo2"){
             steps{
                 script{
-                    snykSecurity(
-                        snykInstallation: 'SnykPlugin',
-                        snykTokenId: "snyktoken",
-                        severity: "--severity-Threshold=high",
-                        failOnIssues: false,
-                        monitorProjectOnBuild: false,
-                        additionalArguments: "--github https://github.com/FelipeMoralesCyberTrust/PP-backend.git")
-                    
-                    /*
-                    if (snykResult2==null){
-                        echo "continuar con jenkins"
-                    }
-                    else{
-                        if (snykResult2.contains("high severity")){
-                            error('Se encontraron vulnerabilidades altas. Deteniendo el pipeline')
+                    dir('C:/ProgramData/Jenkins/.jenkins/workspace/pipelineproyecto'){
+                        try{
+                            bat 'snyk auth "f3995448-4066-4d0e-8dc5-e20a69396bf6"'
+                            bat '''
+                                snyk test --github "https://github.com/FelipeMoralesCyberTrust/PP-frontend.git" --json --debug --fail-on-issues=false > "snyk-results2.json"
+                            '''
+                            def result = readFile(file: 'C:/ProgramData/Jenkins/.jenkins/workspace/pipelineproyecto/snyk-results2.json').trim()
+                            if (result.contains('"severity": "critical"')) {
+                                echo "Se encontraron vulnerabilidades criticas. Deteniendo la ejecución."
+                                error("Deteniendo la ejecución debido a vulnerabilidades criticas.")
+                            } else {
+                                echo "No se encontraron vulnerabilidades criticas."
+                            }
+                        } catch(err){
+                            echo "Un error esperado a ocurrido, seguir con jenkins."
+                            def result = readFile(file: 'C:/ProgramData/Jenkins/.jenkins/workspace/pipelineproyecto/snyk-results2.json').trim()
+                            if (result.contains('"severity": "critical"')) {
+                                echo "Se encontraron vulnerabilidades criticas. Deteniendo la ejecución."
+                                error("Deteniendo la ejecución debido a vulnerabilidades criticas.")
+                            } else {
+                                echo "No se encontraron vulnerabilidades criticas."
+                            }
                         }
-                        else{
-                            echo "continuar con jenkins"
-                        }
                     }
-                    
-                    echo "snykResult2: ${snykResult2.getClass()}"
-                    if (snykResult2 != null) {
-                        if (snykResult2.contains("high severity")) {
-                            error('Se encontraron vulnerabilidades altas. Deteniendo el pipeline.')
-                        } else {
-                            echo "Continuar con Jenkins."
-                        }
-                    } else {
-                        echo "Continuar con Jenkins."
-                    }
-                    */
                 }
             }
         }

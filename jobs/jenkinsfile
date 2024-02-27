@@ -118,62 +118,32 @@ pipeline {
         stage("Snyk Test Repo1"){
             steps{
                 script{
-                    dir('/var/lib/jenkins/jobs/pipelineProyecto'){
+                    dir('/var/lib/jenkins/jobs/pipelineProyecto'){ //
                         try{
                             sh 'snyk auth "f3995448-4066-4d0e-8dc5-e20a69396bf6"'
                             sh '''
                                 snyk test --github "https://github.com/FelipeMoralesCyberTrust/PP-frontend.git" --json --debug --fail-on-issues=false > "snyk-results.json"
                             '''
                             if (sh(script: 'grep \'"severity": "critical"\'  /var/lib/jenkins/jobs/pipelineProyecto/snyk-results.json', returnStatus: true) == 0) {
-                                echo "Se encontraron vulnerabilidades altas. Deteniendo la ejecución."
-                                error("Deteniendo la ejecución debido a vulnerabilidades altas.")
+                                echo "Se encontraron vulnerabilidades criticas. Deteniendo la ejecución."
+                                error("Deteniendo la ejecución debido a vulnerabilidades criticas.")
                             } else {
-                                echo "No se encontraron vulnerabilidades altas."
+                                echo "No se encontraron vulnerabilidades criticas."
                             }
                         }catch(err){
                             echo "Un error esperado a ocurrido, seguir con jenkins."
                             if (sh(script: 'grep \'"severity": "critical"\' /var/lib/jenkins/jobs/pipelineProyecto/snyk-results.json', returnStatus: true) == 0) {
-                                echo "Se encontraron vulnerabilidades medias. Deteniendo la ejecución."
-                                error("Deteniendo la ejecución debido a vulnerabilidades medias.")
+                                echo "Se encontraron vulnerabilidades criticas. Deteniendo la ejecución."
+                                error("Deteniendo la ejecución debido a vulnerabilidades criticas.")
                             } else {
-                                    echo "No se encontraron vulnerabilidades altas."
+                                    echo "No se encontraron vulnerabilidades criticas."
                             }
                         }
                     }
                 }
             }
         }
-        /*
-        stage("Snyk Test Repo1"){
-            steps{         
-                script{
-                    def snykResult= snykSecurity(                                   //Se le asigna el resultado del analisis a snykResult/snykSecurity es una funcion que e utiliza para scannear vulnerabilidades
-                        snykInstallation: 'SnykPlugin',                             //Especifica la instalación de Snyk llamada 'SnykPlugin'. Plugin instalado en jenkins.
-                        snykTokenId: "snyktoken",                                   //Indica la identificación de la credencial de token de Snyk que se utilizará para la autenticación. Deberia usarse el API key de la cuenta de snyk
-                        severity: "--severity-Threshold=critical",                  //Establece un umbral de severidad, en este caso, se configura para considerar solo vulnerabilidades críticas.
-                        failOnIssues: true,                                         //Hace que el pipeline falle si se encuentran problemas de seguridad durante el escaneo.
-                        monitorProjectOnBuild: true,                                //
-                        additionalArguments: "--container '${name_final_front}'")   //
-                    
-                    if (snykResult.contains("critical severity")) {
-                        error('Se encontraron vulnerabilidades críticas. Deteniendo el pipeline.')
-                    }
-                }
-            }
-        }
-        */
-        /*
-        stage("snyk test image"){
-            steps{
-                script{
-                    sh "snyk auth 'snyktoken'"
-                    sh "snyk container test  ${name_final_front}"
-                }
-            }
-        }*/
-
-
-
+        
         stage('Verificar Repo 2') {
             steps {
                 checkout([$class: 'GitSCM', branches: [[name: '*/main']], 
@@ -235,16 +205,27 @@ pipeline {
         stage("Snyk Test Repo2"){
             steps{
                 script{
-                    def snykResult = snykSecurity(
-                        snykInstallation: 'SnykPlugin',
-                        snykTokenId: "snyktoken",
-                        severity: "--severity-Threshold=medium",
-                        failOnIssues: false,
-                        monitorProjectOnBuild: false,
-                        additionalArguments: "--container '${name_final_back}'")
-                    
-                    if (snykResult.contains("medium severity")) {
-                        error('Se encontraron vulnerabilidades críticas. Deteniendo el pipeline.')
+                    dir('/var/lib/jenkins/jobs/pipelineProyecto'){
+                        try{
+                            sh 'snyk auth "f3995448-4066-4d0e-8dc5-e20a69396bf6"'
+                            sh '''
+                                snyk test --github "https://github.com/FelipeMoralesCyberTrust/PP-frontend.git" --json --debug --fail-on-issues=false > "snyk-results2.json"
+                            '''
+                            if (sh(script: 'grep \'"severity": "critical"\'  /var/lib/jenkins/jobs/pipelineProyecto/snyk-results2.json', returnStatus: true) == 0) {
+                                echo "Se encontraron vulnerabilidades criticas. Deteniendo la ejecución."
+                                error("Deteniendo la ejecución debido a vulnerabilidades criticas.")
+                            } else {
+                                echo "No se encontraron vulnerabilidades criticas."
+                            }
+                        }catch(err){
+                            echo "Un error esperado a ocurrido, seguir con jenkins."
+                            if (sh(script: 'grep \'"severity": "critical"\' /var/lib/jenkins/jobs/pipelineProyecto/snyk-results2.json', returnStatus: true) == 0) {
+                                echo "Se encontraron vulnerabilidades criticas. Deteniendo la ejecución."
+                                error("Deteniendo la ejecución debido a vulnerabilidades criticas.")
+                            } else {
+                                    echo "No se encontraron vulnerabilidades criticas."
+                            }
+                        }
                     }
                 }
             }
