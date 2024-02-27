@@ -38,7 +38,7 @@ pipeline {
 
             }
         }
-
+        /*
         stage ("Pull HawkScan Image") {
             steps {
                 script{
@@ -46,7 +46,7 @@ pipeline {
                 }
 
             }
-        }
+        }*/
 
         stage('Verificar Repo 1') {
             steps {
@@ -59,6 +59,7 @@ pipeline {
                 }
             }
         }
+        /*
         stage('Analisis Repo 1') {
             steps {
                 script {
@@ -75,16 +76,17 @@ pipeline {
                     }
                 }
             }
-        }
+        }*/
+        /*
         stage('Quality Gate Repo 1') {
             steps {
                 timeout(time: 1, unit: 'HOURS') {
                     waitForQualityGate abortPipeline: true
                 }
             }
-        }
+        }*/
 
-        stage('Build Repo 1') {
+        stage('Build Frontend') {
             steps {
                 script {
                     bat """
@@ -93,7 +95,7 @@ pipeline {
                 }
             }
         }
-
+        /*
         stage ("HawkScan Test Repo1") {
             steps {
                 echo "Directorio de trabajo actual: ${WORKSPACE}"
@@ -105,7 +107,8 @@ pipeline {
                         stackhawk/hawkscan"""
                 }
             }
-        }
+        }*/
+        /*
         stage("Snyk Test Repo1"){
             steps{
                 script{
@@ -135,8 +138,7 @@ pipeline {
                     }
                 }
             }
-        }
-        
+        }*/
         stage('Verificar Repo 2') {
             steps {
                 checkout([$class: 'GitSCM', branches: [[name: '*/main']], 
@@ -146,6 +148,7 @@ pipeline {
                           userRemoteConfigs: [[credentialsId: 'TokenGitFelipe', url: 'https://github.com/FelipeMoralesCyberTrust/PP-backend.git']]])
             }
         }
+        /*
         stage('Analisis Repo 2') {
             steps {
                 script {
@@ -171,6 +174,7 @@ pipeline {
                 }
             }
         }
+        */
 
         stage('Build Repo 2') {
             steps {
@@ -181,7 +185,7 @@ pipeline {
                 }
             }
         }
-
+        /*
         stage ("HawkScan Test Repo2") {
             steps {
                 echo "Directorio de trabajo actual: ${WORKSPACE}"
@@ -224,7 +228,7 @@ pipeline {
                 }
             }
         }
-        
+        */
         stage('Deploy') {
             steps {
                 script {
