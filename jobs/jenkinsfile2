@@ -48,7 +48,7 @@ pipeline {
             }
         }*/
 
-        stage('Verificar Repo 1') {
+        stage('Verificar Frontend') {
             steps {
                 script{
                     checkout([$class: 'GitSCM', branches: [[name: '*/main']], 
@@ -139,7 +139,7 @@ pipeline {
                 }
             }
         }*/
-        stage('Verificar Repo 2') {
+        stage('Verificar Backend') {
             steps {
                 checkout([$class: 'GitSCM', branches: [[name: '*/main']], 
                           doGenerateSubmoduleConfigurations: false, 
@@ -176,7 +176,7 @@ pipeline {
         }
         */
 
-        stage('Build Repo 2') {
+        stage('Build Backend') {
             steps {
                 script {
                     bat """
@@ -229,7 +229,7 @@ pipeline {
             }
         }
         */
-        stage('Deploy') {
+        stage('Despliegue de Aplicacion') {
             steps {
                 script {
                     dir('C:/ProgramData/Jenkins/.jenkins/workspace/pipelineproyecto') {
