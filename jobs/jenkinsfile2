@@ -201,7 +201,7 @@ pipeline {
                         try{
                             bat 'snyk auth "f3995448-4066-4d0e-8dc5-e20a69396bf6"'
                             bat '''
-                                snyk test --github "https://github.com/FelipeMoralesCyberTrust/PP-frontend.git" --json --debug --fail-on-issues=false > "snyk-results2.json"
+                                snyk test --github "https://github.com/FelipeMoralesCyberTrust/PP-backend.git" --json --debug --fail-on-issues=false > "snyk-results2.json"
                             '''
                             def result = readFile(file: 'C:/ProgramData/Jenkins/.jenkins/workspace/pipelineproyecto/snyk-results2.json').trim()
                             if (result.contains('"severity": "critical"')) {
