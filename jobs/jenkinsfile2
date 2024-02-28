@@ -100,7 +100,7 @@ pipeline {
             steps {
                 script{
                     dir('C:/ProgramData/Jenkins/.jenkins/workspace'){    
-                        if (!fileExists("practicaFrontend")) {
+                        if (!fileExists("C:/ProgramData/Jenkins/.jenkins/workspace/practicaFrontend")) {
                             echo "Clonando el repositorio desde GitHub"
                             git url: 'https://github.com/FelipeAMorales/practicaFrontend.git', branch: 'main', credentialsId: 'TokenGitFelipe'
                         } else {
