@@ -99,21 +99,23 @@ pipeline {
         stage ("HawkScan Test Frontend") {
             steps {
                 script{
-                    if (!fileExists("${WORKSPACE}/practicaFrontend")) {
-                        echo "Clonando el repositorio desde GitHub"
-                        git url: 'https://github.com/FelipeAMorales/practicaFrontend.git', branch: 'main', credentialsId: 'TokenGitFelipe'
-                    } else {
-                        echo "El repositorio ya está clonado en el directorio de trabajo"
-                        echo "Actualizando el repositorio"
-                        checkout scm
-                    }
-                    withCredentials([string(credentialsId:'stackhawk-api-key', variable: 'hawk_api_key')]){
-                        bat """docker run -v ${WORKSPACE}:/hawk:rw -t \
-                            -e API_KEY=${hawk_api_key} \
-                            -e NO_COLOR=true \
-                            --name hawktest1 \
-                            stackhawk/hawkscan"""
+                    dir('C:/ProgramData/Jenkins/.jenkins/workspace'){    
+                        if (!fileExists("${WORKSPACE}/practicaFrontend")) {
+                            echo "Clonando el repositorio desde GitHub"
+                            git url: 'https://github.com/FelipeAMorales/practicaFrontend.git', branch: 'main', credentialsId: 'TokenGitFelipe'
+                        } else {
+                            echo "El repositorio ya está clonado en el directorio de trabajo"
+                            echo "Actualizando el repositorio"
+                            checkout scm
                         }
+                        withCredentials([string(credentialsId:'stackhawk-api-key', variable: 'hawk_api_key')]){
+                            bat """docker run -v ${WORKSPACE}:/hawk:rw -t \
+                                -e API_KEY=${hawk_api_key} \
+                                -e NO_COLOR=true \
+                                --name hawktest1 \
+                                stackhawk/hawkscan"""
+                        }
+                    }
                 }
             }
         }
