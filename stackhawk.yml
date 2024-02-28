@@ -1,7 +1,7 @@
 app:
-  applicationId: 02813ae1-1f9c-4b19-9926-bdd7a5afae40
+  applicationId: bcf27034-ddaa-4e82-b252-164545725368
   host: http://localhost:8080
-  env: Pre-Production
+  env: Development
   
 hawk:
   startupTimeoutMinutes: 1
