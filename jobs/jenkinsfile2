@@ -38,7 +38,7 @@ pipeline {
 
             }
         }
-        /*
+        
         stage ("Pull HawkScan Image") {
             steps {
                 script{
@@ -46,7 +46,7 @@ pipeline {
                 }
 
             }
-        }*/
+        }
 
         stage('Verificar Frontend') {
             steps {
@@ -59,7 +59,7 @@ pipeline {
                 }
             }
         }
-        /*
+        
         stage('Analisis Repo 1') {
             steps {
                 script {
@@ -76,15 +76,15 @@ pipeline {
                     }
                 }
             }
-        }*/
-        /*
+        }
+        
         stage('Quality Gate Repo 1') {
             steps {
                 timeout(time: 1, unit: 'HOURS') {
                     waitForQualityGate abortPipeline: true
                 }
             }
-        }*/
+        }
 
         stage('Build Frontend') {
             steps {
@@ -95,7 +95,7 @@ pipeline {
                 }
             }
         }
-        /*
+        
         stage ("HawkScan Test Repo1") {
             steps {
                 echo "Directorio de trabajo actual: ${WORKSPACE}"
@@ -107,8 +107,8 @@ pipeline {
                         stackhawk/hawkscan"""
                 }
             }
-        }*/
-        /*
+        }
+        
         stage("Snyk Test Repo1"){
             steps{
                 script{
@@ -138,7 +138,7 @@ pipeline {
                     }
                 }
             }
-        }*/
+        }
         stage('Verificar Backend') {
             steps {
                 checkout([$class: 'GitSCM', branches: [[name: '*/main']], 
@@ -148,7 +148,7 @@ pipeline {
                           userRemoteConfigs: [[credentialsId: 'TokenGitFelipe', url: 'https://github.com/FelipeMoralesCyberTrust/PP-backend.git']]])
             }
         }
-        /*
+        
         stage('Analisis Repo 2') {
             steps {
                 script {
@@ -174,7 +174,7 @@ pipeline {
                 }
             }
         }
-        */
+        
 
         stage('Build Backend') {
             steps {
@@ -185,7 +185,7 @@ pipeline {
                 }
             }
         }
-        /*
+        
         stage ("HawkScan Test Repo2") {
             steps {
                 echo "Directorio de trabajo actual: ${WORKSPACE}"
@@ -228,14 +228,14 @@ pipeline {
                 }
             }
         }
-        */
+        
         stage('Despliegue de Aplicacion') {
             steps {
                 script {
                     dir('C:/ProgramData/Jenkins/.jenkins/workspace/pipelineproyecto') {
                         bat 'docker-compose -f docker-compose.yml up -d'
                     }
-                } //C:/ProgramData/Jenkins/.jenkins/workspace/pipelineproyecto
+                }
             }
         }
     }
