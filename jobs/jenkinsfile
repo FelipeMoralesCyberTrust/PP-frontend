@@ -217,9 +217,9 @@ pipeline {
                 // Especifica la imagen Docker a ejecutar, que contiene HawkScan para realizar las pruebas de seguridad
             }
         }
-        stage("Snyk Test Backend"){ // Definición de una etapa llamada "Snyk Test Backend"
-            steps{ // Inicio de la sección de pasos de la etapa
-                script{ // Inicio de un bloque de script Groovy
+        stage("Snyk Test Backend"){ 
+            steps{ 
+                script{ 
                     dir('/var/lib/jenkins/jobs/pipelineProyecto'){ // Cambio al directorio donde se encuentra el repositorio del proyecto
                         try{ // Inicio de un bloque try-catch para manejar errores
                             sh 'snyk auth "f3995448-4066-4d0e-8dc5-e20a69396bf6"' // Ejecuta el comando 'snyk auth' para autenticarse con Snyk
