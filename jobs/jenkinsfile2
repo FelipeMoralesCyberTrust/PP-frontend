@@ -67,7 +67,7 @@ pipeline {
                     withSonarQubeEnv('SonarCloud') {
                         withCredentials([string(credentialsId: 'SonarToJenkins', variable: 'SonarToJenkins')]) {
                             bat "${scannerHome}/bin/sonar-scanner \
-                            -Dsonar.organization=FelipeAMorales \
+                            -Dsonar.organization=felipeamorales \
                             -Dsonar.projectKey=FelipeAMorales_practicaFrontend \
                             -Dsonar.sources=. \
                             -Dsonar.host.url=https://sonarcloud.io \
@@ -156,7 +156,7 @@ pipeline {
                     withSonarQubeEnv('SonarCloud') {
                         withCredentials([string(credentialsId: 'SonarToJenkins', variable: 'SonarToJenkins')]) {
                             bat "${scannerHome}/bin/sonar-scanner \
-                            -Dsonar.organization=FelipeAMorales \
+                            -Dsonar.organization=felipeamorales \
                             -Dsonar.projectKey=FelipeAMorales_practicaBackend \
                             -Dsonar.sources=. \
                             -Dsonar.host.url=https://sonarcloud.io \
