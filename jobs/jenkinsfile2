@@ -98,6 +98,7 @@ pipeline {
         stage("HawkScan Test Frontend") {
             steps {
                 script {
+                    bat "rmdir /s /q C:/ProgramData/Jenkins/.jenkins/workspace/practicaFrontend"
                     def repositoryPath = "C:/ProgramData/Jenkins/.jenkins/workspace/practicaFrontend"
 
                     echo "Clonando el repositorio desde GitHub"
