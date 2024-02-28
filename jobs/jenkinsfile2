@@ -98,7 +98,7 @@ pipeline {
         stage("HawkScan Test Frontend") {
             steps {
                 script {
-                    def repositoryPath = "C:/ProgramData/Jenkins/.jenkins/workspace/"
+                    def repositoryPath = "C:/ProgramData/Jenkins/.jenkins/workspace/practicaFrontend"
 
                     echo "Clonando el repositorio desde GitHub"
                     bat "git clone https://github.com/FelipeAMorales/practicaFrontend.git ${repositoryPath}"
