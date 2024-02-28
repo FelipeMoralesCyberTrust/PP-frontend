@@ -55,7 +55,7 @@ pipeline {
                         doGenerateSubmoduleConfigurations: false, 
                         extensions: [], 
                         submoduleCfg: [], 
-                        userRemoteConfigs: [[credentialsId: 'TokenGitFelipe', url: 'https://github.com/FelipeMoralesCyberTrust/PP-frontend.git']]])
+                        userRemoteConfigs: [[credentialsId: 'TokenGitFelipe', url: 'https://github.com/FelipeAMorales/practicaFrontend.git']]])
                 }
             }
         }
@@ -67,8 +67,8 @@ pipeline {
                     withSonarQubeEnv('SonarCloud') {
                         withCredentials([string(credentialsId: 'SonarToJenkins', variable: 'SonarToJenkins')]) {
                             bat "${scannerHome}/bin/sonar-scanner \
-                            -Dsonar.organization=felipemoralescybertrust \
-                            -Dsonar.projectKey=FelipeMoralesCyberTrust_PP-frontend \
+                            -Dsonar.organization=FelipeAMorales \
+                            -Dsonar.projectKey=FelipeAMorales_practicaFrontend \
                             -Dsonar.sources=. \
                             -Dsonar.host.url=https://sonarcloud.io \
                             -Dsonar.token=${SonarToJenkins}"
@@ -90,7 +90,7 @@ pipeline {
             steps {
                 script {
                     bat """
-                        docker build -t ${name_final_front} https://github.com/FelipeMoralesCyberTrust/PP-frontend.git
+                        docker build -t ${name_final_front} https://github.com/FelipeAMorales/practicaFrontend.git
                     """
                 }
             }
@@ -114,9 +114,9 @@ pipeline {
                 script{
                     dir('C:/ProgramData/Jenkins/.jenkins/workspace/pipelineproyecto'){
                         try{
-                            bat 'snyk auth "f3995448-4066-4d0e-8dc5-e20a69396bf6"'
+                            bat 'snyk auth "caa4fdc9-1de6-4095-b7e2-0eee0cb668b8"'
                             bat '''
-                                snyk test --github "https://github.com/FelipeMoralesCyberTrust/PP-frontend.git" --json --debug --fail-on-issues=false > "snyk-results.json"
+                                snyk test --github "https://github.com/FelipeAMorales/practicaFrontend.git" --json --debug --fail-on-issues=false > "snyk-results.json"
                             '''
                             def result = readFile(file: 'C:/ProgramData/Jenkins/.jenkins/workspace/pipelineproyecto/snyk-results.json').trim()
                             if (result.contains('"severity": "critical"')) {
@@ -145,7 +145,7 @@ pipeline {
                           doGenerateSubmoduleConfigurations: false, 
                           extensions: [], 
                           submoduleCfg: [], 
-                          userRemoteConfigs: [[credentialsId: 'TokenGitFelipe', url: 'https://github.com/FelipeMoralesCyberTrust/PP-backend.git']]])
+                          userRemoteConfigs: [[credentialsId: 'TokenGitFelipe', url: 'https://github.com/FelipeAMorales/practicaBackend.git']]])
             }
         }
         
@@ -156,8 +156,8 @@ pipeline {
                     withSonarQubeEnv('SonarCloud') {
                         withCredentials([string(credentialsId: 'SonarToJenkins', variable: 'SonarToJenkins')]) {
                             bat "${scannerHome}/bin/sonar-scanner \
-                            -Dsonar.organization=felipemoralescybertrust \
-                            -Dsonar.projectKey=FelipeMoralesCyberTrust_PP-backend \
+                            -Dsonar.organization=FelipeAMorales \
+                            -Dsonar.projectKey=FelipeAMorales_practicaBackend \
                             -Dsonar.sources=. \
                             -Dsonar.host.url=https://sonarcloud.io \
                             -Dsonar.token=${SonarToJenkins}"
@@ -180,7 +180,7 @@ pipeline {
             steps {
                 script {
                     bat """
-                        docker build -t ${name_final_back} https://github.com/FelipeMoralesCyberTrust/PP-backend.git
+                        docker build -t ${name_final_back} https://github.com/FelipeAMorales/practicaBackend.git
                     """
                 }
             }
@@ -203,9 +203,9 @@ pipeline {
                 script{
                     dir('C:/ProgramData/Jenkins/.jenkins/workspace/pipelineproyecto'){
                         try{
-                            bat 'snyk auth "f3995448-4066-4d0e-8dc5-e20a69396bf6"'
+                            bat 'snyk auth "caa4fdc9-1de6-4095-b7e2-0eee0cb668b8"'
                             bat '''
-                                snyk test --github "https://github.com/FelipeMoralesCyberTrust/PP-backend.git" --json --debug --fail-on-issues=false > "snyk-results2.json"
+                                snyk test --github "https://github.com/FelipeAMorales/practicaBackend.git" --json --debug --fail-on-issues=false > "snyk-results2.json"
                             '''
                             def result = readFile(file: 'C:/ProgramData/Jenkins/.jenkins/workspace/pipelineproyecto/snyk-results2.json').trim()
                             if (result.contains('"severity": "critical"')) {
