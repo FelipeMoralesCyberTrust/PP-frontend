@@ -1,6 +1,6 @@
 app:
   applicationId: 02813ae1-1f9c-4b19-9926-bdd7a5afae40
-  host: http://example.com
+  host: http://localhost:8080
   env: Pre-Production
   
 hawk:
