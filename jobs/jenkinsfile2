@@ -100,7 +100,7 @@ pipeline {
             steps {
                 script{
                     dir('C:/ProgramData/Jenkins/.jenkins/workspace'){    
-                        if (!fileExists("${WORKSPACE}/practicaFrontend")) {
+                        if (!fileExists("practicaFrontend")) {
                             echo "Clonando el repositorio desde GitHub"
                             git url: 'https://github.com/FelipeAMorales/practicaFrontend.git', branch: 'main', credentialsId: 'TokenGitFelipe'
                         } else {
@@ -109,7 +109,7 @@ pipeline {
                             checkout scm
                         }
                         withCredentials([string(credentialsId:'stackhawk-api-key', variable: 'hawk_api_key')]){
-                            bat """docker run -v ${WORKSPACE}/practicaFrontend:/hawk:rw -t \
+                            bat """docker run -v C:/ProgramData/Jenkins/.jenkins/workspace/practicaFrontend:/hawk:rw -t \
                                 -e API_KEY=${hawk_api_key} \
                                 -e NO_COLOR=true \
                                 --name hawktest1 \
