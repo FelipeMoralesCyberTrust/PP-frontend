@@ -209,7 +209,7 @@ pipeline {
                         try{
                             sh 'snyk auth "f3995448-4066-4d0e-8dc5-e20a69396bf6"'
                             sh '''
-                                snyk test --github "https://github.com/FelipeMoralesCyberTrust/PP-frontend.git" --json --debug --fail-on-issues=false > "snyk-results2.json"
+                                snyk test --github "https://github.com/FelipeMoralesCyberTrust/PP-backend.git" --json --debug --fail-on-issues=false > "snyk-results2.json"
                             '''
                             if (sh(script: 'grep \'"severity": "critical"\'  /var/lib/jenkins/jobs/pipelineProyecto/snyk-results2.json', returnStatus: true) == 0) {
                                 echo "Se encontraron vulnerabilidades criticas. Deteniendo la ejecución."
