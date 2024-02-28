@@ -1,10 +1,10 @@
 app:
-  applicationId: bcf27034-ddaa-4e82-b252-164545725368
-  host: http://54.207.206.167:8080
+  applicationId: 4f3350d2-0695-4e89-b686-c03ffdc3eb13
+  host: http://example.com
   env: Development
   
 hawk:
-  startupTimeoutMinutes: 1
+  startupTimeoutMinutes: 5
   spider:
     base: false
  
