@@ -109,7 +109,7 @@ pipeline {
                             checkout scm
                         }
                         withCredentials([string(credentialsId:'stackhawk-api-key', variable: 'hawk_api_key')]){
-                            bat """docker run -v ${WORKSPACE}:/hawk:rw -t \
+                            bat """docker run -v ${WORKSPACE}/practicaFrontend:/hawk:rw -t \
                                 -e API_KEY=${hawk_api_key} \
                                 -e NO_COLOR=true \
                                 --name hawktest1 \
