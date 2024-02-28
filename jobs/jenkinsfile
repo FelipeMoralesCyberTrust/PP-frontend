@@ -115,28 +115,28 @@ pipeline {
                     //Configura HawkScan para no usar colores en la salida, lo cual es útil para entornos de Jenkins.
                     //Asigna un nombre al contenedor como 'hawktest1'.
         }
-        stage("Snyk Test Frontend"){
-            steps{
-                script{
-                    dir('/var/lib/jenkins/jobs/pipelineProyecto'){ //
-                        try{
-                            sh 'snyk auth "f3995448-4066-4d0e-8dc5-e20a69396bf6"'
+        stage("Snyk Test Frontend"){ // Definición de una etapa llamada "Snyk Test Frontend"
+            steps{ // Inicio de la sección de pasos de la etapa
+                script{ // Inicio de un bloque de script Groovy
+                    dir('/var/lib/jenkins/jobs/pipelineProyecto'){ // Cambio al directorio donde se encuentra el repositorio del proyecto
+                        try{ // Inicio de un bloque try-catch para manejar errores
+                            sh 'snyk auth "f3995448-4066-4d0e-8dc5-e20a69396bf6"' // Ejecuta el comando 'snyk auth' para autenticarse con Snyk
                             sh '''
                                 snyk test --github "https://github.com/FelipeMoralesCyberTrust/PP-frontend.git" --json --debug --fail-on-issues=false > "snyk-results.json"
-                            '''
-                            if (sh(script: 'grep \'"severity": "critical"\'  snyk-results.json', returnStatus: true) == 0) {
-                                echo "Se encontraron vulnerabilidades criticas. Deteniendo la ejecución."
-                                error("Deteniendo la ejecución debido a vulnerabilidades criticas.")
+                            ''' // Ejecuta el comando 'snyk test' para realizar la prueba de seguridad en el código fuente del repositorio y guarda los resultados en un archivo JSON
+                            if (sh(script: 'grep \'"severity": "critical"\'  snyk-results.json', returnStatus: true) == 0) { // Verifica si se encontraron vulnerabilidades críticas en los resultados de la prueba
+                                echo "Se encontraron vulnerabilidades criticas. Deteniendo la ejecución." // Imprime un mensaje indicando que se encontraron vulnerabilidades críticas
+                                error("Deteniendo la ejecución debido a vulnerabilidades criticas.") // Detiene la ejecución del pipeline debido a las vulnerabilidades críticas encontradas
                             } else {
-                                echo "No se encontraron vulnerabilidades criticas."
+                                echo "No se encontraron vulnerabilidades criticas." // Imprime un mensaje indicando que no se encontraron vulnerabilidades críticas
                             }
-                        }catch(err){
-                            echo "Un error esperado a ocurrido, seguir con jenkins."
-                            if (sh(script: 'grep \'"severity": "critical"\' snyk-results.json', returnStatus: true) == 0) {
-                                echo "Se encontraron vulnerabilidades criticas. Deteniendo la ejecución."
-                                error("Deteniendo la ejecución debido a vulnerabilidades criticas.")
+                        }catch(err){ // Manejo de excepciones en caso de error durante la ejecución del bloque try
+                            echo "Un error esperado a ocurrido, seguir con jenkins." // Imprime un mensaje indicando que ocurrió un error esperado y que se debe continuar con Jenkins
+                            if (sh(script: 'grep \'"severity": "critical"\' snyk-results.json', returnStatus: true) == 0) { // Verifica si se encontraron vulnerabilidades críticas en los resultados de la prueba
+                                echo "Se encontraron vulnerabilidades criticas. Deteniendo la ejecución." // Imprime un mensaje indicando que se encontraron vulnerabilidades críticas
+                                error("Deteniendo la ejecución debido a vulnerabilidades criticas.") // Detiene la ejecución del pipeline debido a las vulnerabilidades críticas encontradas
                             } else {
-                                    echo "No se encontraron vulnerabilidades criticas."
+                                echo "No se encontraron vulnerabilidades criticas." // Imprime un mensaje indicando que no se encontraron vulnerabilidades críticas
                             }
                         }
                     }
@@ -144,32 +144,42 @@ pipeline {
             }
         }
         
-        stage('Verificar Backend') {
-            steps {
-                checkout([$class: 'GitSCM', branches: [[name: '*/main']], 
-                          doGenerateSubmoduleConfigurations: false, 
-                          extensions: [], 
-                          submoduleCfg: [], 
-                          userRemoteConfigs: [[credentialsId: 'TokenGitFelipe', url: 'https://github.com/FelipeMoralesCyberTrust/PP-backend.git']]])
+        stage('Verificar Backend') { // Definición de una etapa llamada "Verificar Backend"
+            steps { // Inicio de la sección de pasos de la etapa
+                checkout([ // Utiliza el paso de "checkout" para obtener el código fuente del repositorio Git
+                    $class: 'GitSCM', // Especifica el tipo de checkout como Git
+                    branches: [[name: '*/main']], // Especifica la rama a verificar (en este caso, "main")
+                    doGenerateSubmoduleConfigurations: false, // Indica que no se generarán configuraciones de submódulos
+                    extensions: [], // No se especifican extensiones adicionales
+                    submoduleCfg: [], // No se especifican configuraciones de submódulos
+                    userRemoteConfigs: [[credentialsId: 'TokenGitFelipe', url: 'https://github.com/FelipeMoralesCyberTrust/PP-backend.git']] // Configura los detalles de acceso al repositorio remoto, incluyendo el ID de las credenciales y la URL del repositorio
+                ])
             }
         }
-        stage('Analisis Backend') {
-            steps {
-                script {
-                    def scannerHome = tool 'sonar-scanner';
-                    withSonarQubeEnv('SonarCloud') {
-                        withCredentials([string(credentialsId: 'SonarToJenkins', variable: 'SonarToJenkins')]) {
-                            sh "${scannerHome}/bin/sonar-scanner \
-                            -Dsonar.organization=felipemoralescybertrust \
-                            -Dsonar.projectKey=FelipeMoralesCyberTrust_PP-backend \
-                            -Dsonar.sources=. \
-                            -Dsonar.host.url=https://sonarcloud.io \
-                            -Dsonar.login=${SonarToJenkins}"
-                        }
+        stage('Analisis Backend') { // Definición de una etapa llamada "Analisis Backend"
+            steps { // Inicio de la sección de pasos de la etapa
+                script { // Inicio de un bloque de script Groovy
+                    def scannerHome = tool 'sonar-scanner'; // Definición de la variable 'scannerHome' que apunta a la ubicación de la herramienta 'sonar-scanner' en Jenkins
+                    withSonarQubeEnv('SonarCloud') { // Configuración del entorno SonarQube, en este caso, para SonarCloud
+                        withCredentials([string(credentialsId: 'SonarToJenkins', variable: 'SonarToJenkins')]) { // Utiliza las credenciales identificadas por el ID 'SonarToJenkins' y las almacena en la variable 'SonarToJenkins'
+                            sh "${scannerHome}/bin/sonar-scanner \ 
+                            -Dsonar.organization=felipemoralescybertrust \ 
+                            -Dsonar.projectKey=FelipeMoralesCyberTrust_PP-backend \ 
+                            -Dsonar.sources=. \ 
+                            -Dsonar.host.url=https://sonarcloud.io \ 
+                            -Dsonar.login=${SonarToJenkins}" 
+                            
+                        }// Ejecuta el comando sonar-scanner para realizar el análisis estático del código fuente
+                            // Especifica la organización en SonarCloud
+                            // Especifica la clave del proyecto en SonarCloud
+                            // Especifica la ruta de las fuentes del proyecto a analizar
+                            // Especifica la URL del servidor SonarCloud
+                            // Utiliza la credencial para autenticarse en SonarCloud
                     }
                 }
             }
         }
+
 
         stage('Quality Gate Backend') {
             steps {
@@ -221,8 +231,7 @@ pipeline {
                             echo "Un error esperado a ocurrido, seguir con jenkins."
                             if (sh(script: 'grep \'"severity": "critical"\' /var/lib/jenkins/jobs/pipelineProyecto/snyk-results2.json', returnStatus: true) == 0) {
                                 echo "Se encontraron vulnerabilidades criticas. Deteniendo la ejecución."
-                                echo "Avanzando jenkins apesar de la vunerabilidad."
-                                //error("Deteniendo la ejecución debido a vulnerabilidades criticas.")
+                                error("Deteniendo la ejecución debido a vulnerabilidades criticas.")
                             } else {
                                     echo "No se encontraron vulnerabilidades criticas."
                             }
