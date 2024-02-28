@@ -51,7 +51,7 @@ pipeline {
             }
         }*/
         // Etapa para verificar que el repositorio existe y hay acceso por parte de jenkins a éste.
-        stage('Verificar Repo 1') {
+        stage('Verificar Frontend') {
             steps {
                 checkout([$class: 'GitSCM', branches: [[name: '*/main']],                       //Jenkins utiliza el plugin GitSCM e indica que se debe verificar la rama main
                           doGenerateSubmoduleConfigurations: false,                             //Evita generar configuraciones para submódulos.
@@ -61,7 +61,7 @@ pipeline {
                           url: 'https://github.com/FelipeMoralesCyberTrust/PP-frontend.git']]]) //Se especifica la URL del repositorio Git
             }
         }
-        stage('Analisis Repo 1') {
+        stage('Analisis Frontend') {
             steps {
                 script {
                     def scannerHome = tool 'sonar-scanner';                                                         //Se establece la ubicación del SonarQube Scanner en la variable scannerHome utilizando la herramienta registrada en Jenkins con el nombre 'sonar-scanner'.
@@ -80,7 +80,7 @@ pipeline {
                 }
             }
         }
-        stage('Quality Gate Repo 1') {
+        stage('Quality Gate Frontend') {
             steps {
                 timeout(time: 1, unit: 'HOURS') {           //Estable que el QualityGate del scaneo de la estapa Analisis Repo 1 debe esperar a lo mucho 1 hora
                     waitForQualityGate abortPipeline: true  //Si el Quality Gate es aprobado, entonces se avanza a la siguiente etapa
@@ -88,7 +88,7 @@ pipeline {
             }
         }
 
-        stage('Build Repo 1') {
+        stage('Build Frontend') {
             steps {
                 script {    //Se crea la imagen docker utilizando el nombre creado en enviroment y el repositorio que debe copiar
                     sh """
@@ -99,7 +99,7 @@ pipeline {
                     // ${USUARIO} y ${CONTRASENA} son credenciales creadas en jenkins.
             }
         }
-        stage ("HawkScan Test Repo1") {
+        stage ("HawkScan Test Frontend") {
             steps {
                 withCredentials([string(credentialsId:'stackhawk-api-key', variable: 'hawk_api_key')]){ //Permite el uso seguro de credenciales almacenadas en Jenkins.
                     sh '''
@@ -115,7 +115,7 @@ pipeline {
                     //Configura HawkScan para no usar colores en la salida, lo cual es útil para entornos de Jenkins.
                     //Asigna un nombre al contenedor como 'hawktest1'.
         }
-        stage("Snyk Test Repo1"){
+        stage("Snyk Test Frontend"){
             steps{
                 script{
                     dir('/var/lib/jenkins/jobs/pipelineProyecto'){ //
@@ -144,7 +144,7 @@ pipeline {
             }
         }
         
-        stage('Verificar Repo 2') {
+        stage('Verificar Backend') {
             steps {
                 checkout([$class: 'GitSCM', branches: [[name: '*/main']], 
                           doGenerateSubmoduleConfigurations: false, 
@@ -153,7 +153,7 @@ pipeline {
                           userRemoteConfigs: [[credentialsId: 'TokenGitFelipe', url: 'https://github.com/FelipeMoralesCyberTrust/PP-backend.git']]])
             }
         }
-        stage('Analisis Repo 2') {
+        stage('Analisis Backend') {
             steps {
                 script {
                     def scannerHome = tool 'sonar-scanner';
@@ -171,7 +171,7 @@ pipeline {
             }
         }
 
-        stage('Quality Gate Repo 2') {
+        stage('Quality Gate Backend') {
             steps {
                 timeout(time: 1, unit: 'HOURS') {
                     waitForQualityGate abortPipeline: true
@@ -179,7 +179,7 @@ pipeline {
             }
         }
 
-        stage('Build Repo 2') {
+        stage('Build Backend') {
             steps {
                 script {
                     sh """
@@ -188,7 +188,7 @@ pipeline {
                 }
             }
         }
-        stage ("HawkScan Test Repo2") {
+        stage ("HawkScan Test Backend") {
             steps {
                 //echo "Directorio de trabajo actual: ${WORKSPACE}"
                 withCredentials([string(credentialsId:'stackhawk-api-key', variable: 'hawk_api_key')]){
@@ -202,7 +202,7 @@ pipeline {
                 }
             }
         }
-        stage("Snyk Test Repo2"){
+        stage("Snyk Test Backend"){
             steps{
                 script{
                     dir('/var/lib/jenkins/jobs/pipelineProyecto'){
