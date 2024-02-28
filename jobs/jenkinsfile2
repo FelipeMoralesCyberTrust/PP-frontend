@@ -96,25 +96,32 @@ pipeline {
             }
         }
         
-        stage ("HawkScan Test Frontend") {
+        stage("HawkScan Test Frontend") {
             steps {
-                script{
-                    dir('C:/ProgramData/Jenkins/.jenkins/workspace'){    
-                        if (!fileExists("C:/ProgramData/Jenkins/.jenkins/workspace/practicaFrontend")) {
-                            echo "Clonando el repositorio desde GitHub"
+                script {
+                    def workspacePath = "C:/ProgramData/Jenkins/.jenkins/workspace"
+                    def repositoryPath = "${workspacePath}/practicaFrontend"
+
+                    if (!fileExists(repositoryPath)) {
+                        echo "La carpeta practicaFrontend no existe en el directorio de trabajo principal"
+                        echo "Clonando el repositorio desde GitHub"
+                        dir(workspacePath) {
                             git url: 'https://github.com/FelipeAMorales/practicaFrontend.git', branch: 'main', credentialsId: 'TokenGitFelipe'
-                        } else {
-                            echo "El repositorio ya está clonado en el directorio de trabajo"
-                            echo "Actualizando el repositorio"
+                        }
+                    } else {
+                        echo "La carpeta practicaFrontend ya existe en el directorio de trabajo principal"
+                        echo "Actualizando el repositorio"
+                        dir(repositoryPath) {
                             checkout scm
                         }
-                        withCredentials([string(credentialsId:'stackhawk-api-key', variable: 'hawk_api_key')]){
-                            bat """docker run -v C:/ProgramData/Jenkins/.jenkins/workspace/practicaFrontend:/hawk:rw -t \
-                                -e API_KEY=${hawk_api_key} \
-                                -e NO_COLOR=true \
-                                --name hawktest1 \
-                                stackhawk/hawkscan"""
-                        }
+                    }
+
+                    withCredentials([string(credentialsId: 'stackhawk-api-key', variable: 'hawk_api_key')]) {
+                        bat """docker run -v ${repositoryPath}:/hawk:rw -t \
+                            -e API_KEY=${hawk_api_key} \
+                            -e NO_COLOR=true \
+                            --name hawktest1 \
+                            stackhawk/hawkscan"""
                     }
                 }
             }
