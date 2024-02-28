@@ -1,5 +1,5 @@
 app:
-  applicationId: 
+  applicationId: 49213d96-5fb6-43de-a58f-0271a2d65b8a
   host: http://54.207.206.167:8080
   env: Development
   
