@@ -60,7 +60,7 @@ pipeline {
             }
         }
         
-        stage('Analisis Repo 1') {
+        stage('Analisis Frontend') {
             steps {
                 script {
                     def scannerHome = tool 'sonar-scanner';
@@ -78,7 +78,7 @@ pipeline {
             }
         }
         
-        stage('Quality Gate Repo 1') {
+        stage('Quality Gate Frontend') {
             steps {
                 timeout(time: 1, unit: 'HOURS') {
                     waitForQualityGate abortPipeline: true
@@ -96,7 +96,7 @@ pipeline {
             }
         }
         
-        stage ("HawkScan Test Repo1") {
+        stage ("HawkScan Test Frontend") {
             steps {
                 echo "Directorio de trabajo actual: ${WORKSPACE}"
                 withCredentials([string(credentialsId:'stackhawk-api-key', variable: 'hawk_api_key')]){
@@ -109,7 +109,7 @@ pipeline {
             }
         }
         
-        stage("Snyk Test Repo1"){
+        stage("Snyk Test Frontend"){
             steps{
                 script{
                     dir('C:/ProgramData/Jenkins/.jenkins/workspace/pipelineproyecto'){
@@ -149,7 +149,7 @@ pipeline {
             }
         }
         
-        stage('Analisis Repo 2') {
+        stage('Analisis Backend') {
             steps {
                 script {
                     def scannerHome = tool 'sonar-scanner';
@@ -167,7 +167,7 @@ pipeline {
             }
         }
 
-        stage('Quality Gate Repo 2') {
+        stage('Quality Gate Backend') {
             steps {
                 timeout(time: 1, unit: 'HOURS') {
                     waitForQualityGate abortPipeline: true
@@ -186,7 +186,7 @@ pipeline {
             }
         }
         
-        stage ("HawkScan Test Repo2") {
+        stage ("HawkScan Test Backend") {
             steps {
                 echo "Directorio de trabajo actual: ${WORKSPACE}"
                 withCredentials([string(credentialsId:'stackhawk-api-key', variable: 'hawk_api_key')]){
@@ -198,7 +198,7 @@ pipeline {
                 }
             }
         }
-        stage("Snyk Test Repo2"){
+        stage("Snyk Test Backend"){
             steps{
                 script{
                     dir('C:/ProgramData/Jenkins/.jenkins/workspace/pipelineproyecto'){
