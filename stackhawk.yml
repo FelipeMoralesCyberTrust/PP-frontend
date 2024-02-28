@@ -1,6 +1,6 @@
 app:
   applicationId: bcf27034-ddaa-4e82-b252-164545725368
-  host: http://localhost:8080
+  host: http://54.207.206.167:8080
   env: Development
   
 hawk:
