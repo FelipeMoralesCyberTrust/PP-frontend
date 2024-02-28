@@ -115,9 +115,9 @@ pipeline {
                     //Configura HawkScan para no usar colores en la salida, lo cual es útil para entornos de Jenkins.
                     //Asigna un nombre al contenedor como 'hawktest1'.
         }
-        stage("Snyk Test Frontend"){ // Definición de una etapa llamada "Snyk Test Frontend"
-            steps{ // Inicio de la sección de pasos de la etapa
-                script{ // Inicio de un bloque de script Groovy
+        stage("Snyk Test Frontend"){ 
+            steps{ 
+                script{ 
                     dir('/var/lib/jenkins/jobs/pipelineProyecto'){ // Cambio al directorio donde se encuentra el repositorio del proyecto
                         try{ // Inicio de un bloque try-catch para manejar errores
                             sh 'snyk auth "f3995448-4066-4d0e-8dc5-e20a69396bf6"' // Ejecuta el comando 'snyk auth' para autenticarse con Snyk
@@ -144,8 +144,8 @@ pipeline {
             }
         }
         
-        stage('Verificar Backend') { // Definición de una etapa llamada "Verificar Backend"
-            steps { // Inicio de la sección de pasos de la etapa
+        stage('Verificar Backend') { 
+            steps { 
                 checkout([ // Utiliza el paso de "checkout" para obtener el código fuente del repositorio Git
                     $class: 'GitSCM', // Especifica el tipo de checkout como Git
                     branches: [[name: '*/main']], // Especifica la rama a verificar (en este caso, "main")
@@ -156,9 +156,9 @@ pipeline {
                 ])
             }
         }
-        stage('Analisis Backend') { // Definición de una etapa llamada "Analisis Backend"
-            steps { // Inicio de la sección de pasos de la etapa
-                script { // Inicio de un bloque de script Groovy
+        stage('Analisis Backend') { 
+            steps { 
+                script { 
                     def scannerHome = tool 'sonar-scanner'; // Definición de la variable 'scannerHome' que apunta a la ubicación de la herramienta 'sonar-scanner' en Jenkins
                     withSonarQubeEnv('SonarCloud') { // Configuración del entorno SonarQube, en este caso, para SonarCloud
                         withCredentials([string(credentialsId: 'SonarToJenkins', variable: 'SonarToJenkins')]) { // Utiliza las credenciales identificadas por el ID 'SonarToJenkins' y las almacena en la variable 'SonarToJenkins'
@@ -181,65 +181,71 @@ pipeline {
         }
 
 
-        stage('Quality Gate Backend') {
-            steps {
-                timeout(time: 1, unit: 'HOURS') {
-                    waitForQualityGate abortPipeline: true
+        stage('Quality Gate Backend') { 
+            steps { 
+                timeout(time: 1, unit: 'HOURS') { // Establece un límite de tiempo máximo para la espera del Quality Gate, en este caso, 1 hora
+                    waitForQualityGate abortPipeline: true // Espera hasta que se cumpla el Quality Gate en SonarQube para el análisis estático del código del backend; si el Quality Gate no se cumple, aborta el pipeline
                 }
             }
         }
 
-        stage('Build Backend') {
-            steps {
-                script {
-                    sh """
-                        docker build -t ${name_final_back} https://github.com/FelipeMoralesCyberTrust/PP-backend.git
+        stage('Build Backend') { 
+            steps { 
+                script { 
+                    sh """ 
+                        docker build -t ${name_final_back} https://github.com/FelipeMoralesCyberTrust/PP-backend.git 
                     """
-                }
+                }// Construye una imagen de Docker con el código fuente del repositorio especificado. El nombre de la imagen se define mediante la variable 'name_final_back'.
+                // Ejecución de un comando shell de manera multi-línea
             }
         }
-        stage ("HawkScan Test Backend") {
-            steps {
-                //echo "Directorio de trabajo actual: ${WORKSPACE}"
-                withCredentials([string(credentialsId:'stackhawk-api-key', variable: 'hawk_api_key')]){
-                    sh '''
-                        docker run -v "${WORKSPACE}:/hawk:rw" -t \
-                        -e "API_KEY=${hawk_api_key}" \
-                        -e "NO_COLOR=true" \
-                        --name hawktest2 \
-                        stackhawk/hawkscan
+
+        stage("HawkScan Test Backend") { 
+            steps { 
+                withCredentials([string(credentialsId:'stackhawk-api-key', variable: 'hawk_api_key')]){ // Utiliza las credenciales identificadas por el ID 'stackhawk-api-key' y las almacena en la variable 'hawk_api_key'
+                    sh ''' // Ejecución de un comando shell de manera multi-línea
+                        docker run -v "${WORKSPACE}:/hawk:rw" -t \ 
+                        -e "API_KEY=${hawk_api_key}" \ 
+                        -e "NO_COLOR=true" \ 
+                        --name hawktest2 \ 
+                        stackhawk/hawkscan 
                     '''
-                }
+                }// Ejecuta un contenedor Docker con la imagen stackhawk/hawkscan, montando el directorio de trabajo actual como '/hawk' dentro del contenedor
+                // Define la variable de entorno 'API_KEY' dentro del contenedor con el valor almacenado en 'hawk_api_key'
+                // Define la variable de entorno 'NO_COLOR' dentro del contenedor como 'true', lo que deshabilita la salida de color en la ejecución de HawkScan
+                // Asigna un nombre al contenedor como 'hawktest2'
+                // Especifica la imagen Docker a ejecutar, que contiene HawkScan para realizar las pruebas de seguridad
             }
         }
-        stage("Snyk Test Backend"){
-            steps{
-                script{
-                    dir('/var/lib/jenkins/jobs/pipelineProyecto'){
-                        try{
-                            sh 'snyk auth "f3995448-4066-4d0e-8dc5-e20a69396bf6"'
+        stage("Snyk Test Backend"){ // Definición de una etapa llamada "Snyk Test Backend"
+            steps{ // Inicio de la sección de pasos de la etapa
+                script{ // Inicio de un bloque de script Groovy
+                    dir('/var/lib/jenkins/jobs/pipelineProyecto'){ // Cambio al directorio donde se encuentra el repositorio del proyecto
+                        try{ // Inicio de un bloque try-catch para manejar errores
+                            sh 'snyk auth "f3995448-4066-4d0e-8dc5-e20a69396bf6"' // Ejecuta el comando 'snyk auth' para autenticarse con Snyk
                             sh '''
                                 snyk test --github "https://github.com/FelipeMoralesCyberTrust/PP-backend.git" --json --debug --fail-on-issues=false > "snyk-results2.json"
-                            '''
-                            if (sh(script: 'grep \'"severity": "critical"\'  /var/lib/jenkins/jobs/pipelineProyecto/snyk-results2.json', returnStatus: true) == 0) {
-                                echo "Se encontraron vulnerabilidades criticas. Deteniendo la ejecución."
-                                error("Deteniendo la ejecución debido a vulnerabilidades criticas.")
+                            ''' // Ejecuta el comando 'snyk test' para realizar la prueba de seguridad en el código fuente del repositorio y guarda los resultados en un archivo JSON
+                            if (sh(script: 'grep \'"severity": "critical"\'  /var/lib/jenkins/jobs/pipelineProyecto/snyk-results2.json', returnStatus: true) == 0) { // Verifica si se encontraron vulnerabilidades críticas en los resultados de la prueba
+                                echo "Se encontraron vulnerabilidades criticas. Deteniendo la ejecución." // Imprime un mensaje indicando que se encontraron vulnerabilidades críticas
+                                error("Deteniendo la ejecución debido a vulnerabilidades criticas.") // Detiene la ejecución del pipeline debido a las vulnerabilidades críticas encontradas
                             } else {
-                                echo "No se encontraron vulnerabilidades criticas."
+                                echo "No se encontraron vulnerabilidades criticas." // Imprime un mensaje indicando que no se encontraron vulnerabilidades críticas
                             }
-                        }catch(err){
-                            echo "Un error esperado a ocurrido, seguir con jenkins."
-                            if (sh(script: 'grep \'"severity": "critical"\' /var/lib/jenkins/jobs/pipelineProyecto/snyk-results2.json', returnStatus: true) == 0) {
-                                echo "Se encontraron vulnerabilidades criticas. Deteniendo la ejecución."
-                                error("Deteniendo la ejecución debido a vulnerabilidades criticas.")
+                        }catch(err){ // Manejo de excepciones en caso de error durante la ejecución del bloque try
+                            echo "Un error esperado a ocurrido, seguir con jenkins." // Imprime un mensaje indicando que ocurrió un error esperado y que se debe continuar con Jenkins
+                            if (sh(script: 'grep \'"severity": "critical"\' /var/lib/jenkins/jobs/pipelineProyecto/snyk-results2.json', returnStatus: true) == 0) { // Verifica si se encontraron vulnerabilidades críticas en los resultados de la prueba
+                                echo "Se encontraron vulnerabilidades criticas. Deteniendo la ejecución." // Imprime un mensaje indicando que se encontraron vulnerabilidades críticas
+                                error("Deteniendo la ejecución debido a vulnerabilidades criticas.") // Detiene la ejecución del pipeline debido a las vulnerabilidades críticas encontradas
                             } else {
-                                    echo "No se encontraron vulnerabilidades criticas."
+                                echo "No se encontraron vulnerabilidades criticas." // Imprime un mensaje indicando que no se encontraron vulnerabilidades críticas
                             }
                         }
                     }
                 }
             }
         }
+
         stage('Deploy') {
             steps {
                 script {
